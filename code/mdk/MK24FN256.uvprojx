@@ -384,14 +384,14 @@
           <GroupName>app</GroupName>
           <Files>
             <File>
-              <FileName>clock_config.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\app\clock_config.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\app\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>clock_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\clock_config.c</FilePath>
             </File>
             <File>
               <FileName>FreeRTOSConfig.h</FileName>

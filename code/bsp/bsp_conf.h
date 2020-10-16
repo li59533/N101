@@ -47,7 +47,7 @@
 #define BSP_EXTI_MODULE_ENABLE 			0
 
 #define BSP_IIC_MODULE_ENABLE			0
-#define BSP_SPI_MODULE_ENABLE			0
+#define BSP_SPI_MODULE_ENABLE			1
 #define BSP_WDG_MODULE_ENABLE			0
 #define BSP_SYSTICK_MODULE_ENABLE		0
 
@@ -105,6 +105,11 @@
 	#include "fsl_cmp.h"
 #endif	
 
+
+#if BSP_SPI_MODULE_ENABLE == 1	
+	#include "fsl_dspi.h"
+	#include "fsl_dspi_edma.h"
+#endif	
 
 /**
  * @}

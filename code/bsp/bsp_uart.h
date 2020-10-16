@@ -30,7 +30,7 @@
 #define BSP_UART0   0
 #define BSP_UART1   1
 #define BSP_UART2   2
-
+#define BSP_UART3   3
 
 // ------User def-----
 #define BSP_485COM	BSP_UART1

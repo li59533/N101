@@ -142,7 +142,6 @@ void First_Task(void * pvParameter)
 	DEBUG("First Task Enter\r\n");
 	UBaseType_t firsttask_ramainheap = 0;
 
-	APP_RefreshMB_ConfParam();
 	while(1)
 	{
 		xTaskNotifyWait(0x00,ULONG_MAX,&event_flag , portMAX_DELAY);

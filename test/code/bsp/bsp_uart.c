@@ -108,7 +108,11 @@ static void bsp_uart3_init(void);
 PE3 -> TX1  ALT3
 PE4 -> RX1  ALT3
 
+RX0 PTA15 
+TX0 PTA14
 
+RX3 PTC16
+TX3 PTC17
 
 */
 
@@ -154,23 +158,137 @@ void BSP_Uart0_Open(void)
 }
 
 
+/* UART user callback */
+void UART_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData)
+{
+    userData = userData;
+
+    if (kStatus_UART_TxIdle == status)
+    {
+		//Modbus_485en_R();
+		DEBUG("kStatus_UART_TxIdle\r\n");
+		Modbus_Task_Event_Start(MODBUS_TASK_SET485EN_EVENT, EVENT_FROM_ISR);
+
+    }
+
+    if (kStatus_UART_RxIdle == status)
+    {
+		DEBUG("kStatus_UART_RxIdle\r\n");
+    }
+}
+
+
+/*
+RX0 PTA15 
+TX0 PTA14
+*/
+#define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 1 transmit data source select: UART1_TX pin */
+edma_handle_t g_uart0TxEdmaHandle;
+edma_handle_t g_uart0RxEdmaHandle;
+uart_edma_handle_t g_uart0EdmaHandle;
+uart_handle_t g_uart0_handle;
 static void bsp_uart0_init(void)
 {
+	uart_config_t uartConfig;
+	edma_config_t config;
 	// -------gpio init ------
+    /* Port A Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortA);
 
+    /* PTA14  is configured as UART0_TX */
+    PORT_SetPinMux(PORTA, 14U, kPORT_MuxAlt3);
+
+    /* PTA15  is configured as UART0_RX */
+    PORT_SetPinMux(PORTA, 15U, kPORT_MuxAlt3);
+
+    SIM->SOPT5 = ((SIM->SOPT5 &
+                   /* Mask bits to zero which are setting */
+                   (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+                  /* UART 0 transmit data source select: UART0_TX pin. */
+                  | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
 	// -----------------------		
 	
 	// -------uart 0 init ----
+    /* Initialize the UART. */
+    /*
+     * uartConfig.baudRate_Bps = 115200U;
+     * uartConfig.parityMode = kUART_ParityDisabled;
+     * uartConfig.stopBitCount = kUART_OneStopBit;
+     * uartConfig.txFifoWatermark = 0;
+     * uartConfig.rxFifoWatermark = 1;
+     * uartConfig.enableTx = false;
+     * uartConfig.enableRx = false;
+     */
+    UART_GetDefaultConfig(&uartConfig);
+	uartConfig.baudRate_Bps = 9600;
+	uartConfig.parityMode = kUART_ParityDisabled;
+	uartConfig.stopBitCount = kUART_OneStopBit;
+	
+	/*
+	switch(g_SystemParam_Config.BaudRate_Bps)
+	{
+		case 0 : uartConfig.baudRate_Bps = 2400;break;
+		case 1 : uartConfig.baudRate_Bps = 4800;break;
+		case 2 : uartConfig.baudRate_Bps = 9600;break;
+		case 3 : uartConfig.baudRate_Bps = 14400;break;
+		case 4 : uartConfig.baudRate_Bps = 19200;break;
+		case 5 : uartConfig.baudRate_Bps = 38400;break;
+		case 6 : uartConfig.baudRate_Bps = 56000;break;
+		case 7 : uartConfig.baudRate_Bps = 115200;break;
+		default : uartConfig.baudRate_Bps = 9600;break;
+	}	
+	
+	switch(g_SystemParam_Config.ParityMode)
+	{
+		case 0 : uartConfig.parityMode = kUART_ParityDisabled;break;
+		case 1 : uartConfig.parityMode = kUART_ParityEven;break;
+		case 2 : uartConfig.parityMode = kUART_ParityOdd;break;
+		default : uartConfig.parityMode = kUART_ParityDisabled;break;
+	}
+	
+	switch(g_SystemParam_Config.StopBitCount)
+	{
+		case 1 : uartConfig.stopBitCount = kUART_OneStopBit;break;
+		case 2 : uartConfig.stopBitCount = kUART_TwoStopBit;break;
+		default : uartConfig.stopBitCount = kUART_OneStopBit;break;
+	}
+	*/
+	
+	
+    uartConfig.enableTx = true;
+    uartConfig.enableRx = true;
 
+    UART_Init(UART0, &uartConfig, CLOCK_GetFreq(kCLOCK_CoreSysClk));	
+	
+	
 	// -----------------------
 	
 	// --------open irq-------
-
-	
+	UART_EnableInterrupts( UART0 ,kUART_TransmissionCompleteInterruptEnable);
+	UART_EnableInterrupts( UART0 ,kUART_RxDataRegFullInterruptEnable);
+	NVIC_SetPriority(UART0_RX_TX_IRQn , 7);
+	EnableIRQ(UART0_RX_TX_IRQn);
 	// -----------------------
 	
 // -----------DMA ------------------------
+  /* Init DMAMUX */
+    DMAMUX_Init(DMAMUX0);
+    /* Set channel for UART */
+    DMAMUX_SetSource(DMAMUX0, 0, kDmaRequestMux0UART0Tx);
+    
+    DMAMUX_EnableChannel(DMAMUX0, 0);
 
+
+    /* Init the EDMA module */
+    EDMA_GetDefaultConfig(&config);
+    EDMA_Init(DMA0, &config);
+    EDMA_CreateHandle(&g_uart0TxEdmaHandle, DMA0, 0);
+
+    /* Create UART DMA handle. */
+    UART_TransferCreateHandleEDMA(UART0, &g_uart0EdmaHandle, UART0_UserCallback, NULL, &g_uart0TxEdmaHandle,
+                                  &g_uart0RxEdmaHandle);
+	NVIC_SetPriority(DMA0_IRQn , 7);
 // ---------------------------------------	
 	
 }

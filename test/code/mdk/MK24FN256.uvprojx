@@ -423,6 +423,11 @@
               <FileType>1</FileType>
               <FilePath>..\app\app_lnprotocol.c</FilePath>
             </File>
+            <File>
+              <FileName>app_testcode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_testcode.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

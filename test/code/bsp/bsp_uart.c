@@ -95,6 +95,9 @@ static void bsp_uart1_init(void);
 static void bsp_uart2_init(void);
 static void bsp_uart3_init(void);
 
+static void UART0_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData);
+static void UART1_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData);
+static void UART3_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData);
 /**
  * @}
  */
@@ -159,21 +162,18 @@ void BSP_Uart0_Open(void)
 
 
 /* UART user callback */
-void UART_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData)
+static void UART0_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData)
 {
     userData = userData;
 
     if (kStatus_UART_TxIdle == status)
     {
-		//Modbus_485en_R();
-		DEBUG("kStatus_UART_TxIdle\r\n");
-		Modbus_Task_Event_Start(MODBUS_TASK_SET485EN_EVENT, EVENT_FROM_ISR);
-
+		DEBUG("kStatus_UART0_TxIdle\r\n");
     }
 
     if (kStatus_UART_RxIdle == status)
     {
-		DEBUG("kStatus_UART_RxIdle\r\n");
+		DEBUG("kStatus_UART0_RxIdle\r\n");
     }
 }
 
@@ -294,30 +294,27 @@ static void bsp_uart0_init(void)
 }
 
 
-/* UART user callback */
-void UART_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData)
+/* UART1 user callback */
+static void UART1_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData)
 {
     userData = userData;
 
     if (kStatus_UART_TxIdle == status)
     {
-		//Modbus_485en_R();
-		DEBUG("kStatus_UART_TxIdle\r\n");
-		Modbus_Task_Event_Start(MODBUS_TASK_SET485EN_EVENT, EVENT_FROM_ISR);
-
+		DEBUG("kStatus_UART1_TxIdle\r\n");
     }
 
     if (kStatus_UART_RxIdle == status)
     {
-		DEBUG("kStatus_UART_RxIdle\r\n");
+		DEBUG("kStatus_UART1_RxIdle\r\n");
     }
 }
 
 
 #define SOPT5_UART1TXSRC_UART_TX 0x00u /*!<@brief UART 1 transmit data source select: UART1_TX pin */
-edma_handle_t g_uartTxEdmaHandle;
-edma_handle_t g_uartRxEdmaHandle;
-uart_edma_handle_t g_uartEdmaHandle;
+edma_handle_t g_uart1TxEdmaHandle;
+edma_handle_t g_uart1RxEdmaHandle;
+uart_edma_handle_t g_uart1EdmaHandle;
 uart_handle_t g_uart1_handle;
 static void bsp_uart1_init(void)
 {
@@ -408,11 +405,11 @@ static void bsp_uart1_init(void)
     /* Init the EDMA module */
     EDMA_GetDefaultConfig(&config);
     EDMA_Init(DMA0, &config);
-    EDMA_CreateHandle(&g_uartTxEdmaHandle, DMA0, 0);
+    EDMA_CreateHandle(&g_uart1TxEdmaHandle, DMA0, 0);
 
     /* Create UART DMA handle. */
-    UART_TransferCreateHandleEDMA(UART1, &g_uartEdmaHandle, UART_UserCallback, NULL, &g_uartTxEdmaHandle,
-                                  &g_uartRxEdmaHandle);
+    UART_TransferCreateHandleEDMA(UART1, &g_uart1EdmaHandle, UART1_UserCallback, NULL, &g_uart1TxEdmaHandle,
+                                  &g_uart1RxEdmaHandle);
 	NVIC_SetPriority(DMA0_IRQn , 7);
 // ---------------------------------------	
 	
@@ -423,6 +420,33 @@ static void bsp_uart2_init(void)
 
 }
 
+
+
+/* UART3 user callback */
+static void UART3_UserCallback(UART_Type *base, uart_edma_handle_t *handle, status_t status, void *userData)
+{
+    userData = userData;
+
+    if (kStatus_UART_TxIdle == status)
+    {
+		DEBUG("kStatus_UART3_TxIdle\r\n");
+    }
+
+    if (kStatus_UART_RxIdle == status)
+    {
+		DEBUG("kStatus_UART3_RxIdle\r\n");
+    }
+}
+
+/*
+RX3 PTC16 
+TX3 PTC17
+*/
+
+edma_handle_t g_uart3TxEdmaHandle;
+edma_handle_t g_uart3RxEdmaHandle;
+uart_edma_handle_t g_uart3EdmaHandle;
+uart_handle_t g_uart3_handle;
 static void bsp_uart3_init(void)
 {
 	uart_config_t uartConfig;
@@ -431,21 +455,15 @@ static void bsp_uart3_init(void)
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
 
-    /* PORTC0 (pin C17) is configured as UART3_TX */
+    /* PTC17 is configured as UART3_TX */
     PORT_SetPinMux(PORTC, 17U, kPORT_MuxAlt3);
 
-    /* PORTE1 (pin E3) is configured as UART1_RX */
-    PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt3);
+    /* PTC16 is configured as UART3_RX */
+    PORT_SetPinMux(PORTC, 16U, kPORT_MuxAlt3);
 
-    SIM->SOPT5 = ((SIM->SOPT5 &
-                   /* Mask bits to zero which are setting */
-                   (~(SIM_SOPT5_UART1TXSRC_MASK)))
-
-                  /* UART 1 transmit data source select: UART1_TX pin. */
-                  | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
 	// -----------------------		
 	
-	// -------uart 0 init ----
+	// ------ uart 3 init ----
     /* Initialize the UART. */
     /*
      * uartConfig.baudRate_Bps = 115200U;
@@ -457,7 +475,13 @@ static void bsp_uart3_init(void)
      * uartConfig.enableRx = false;
      */
     UART_GetDefaultConfig(&uartConfig);
+
+	uartConfig.baudRate_Bps = 9600;
+	uartConfig.parityMode = kUART_ParityDisabled;
+	uartConfig.stopBitCount = kUART_OneStopBit;	
 	
+	
+/*	
 	switch(g_SystemParam_Config.BaudRate_Bps)
 	{
 		case 0 : uartConfig.baudRate_Bps = 2400;break;
@@ -484,39 +508,38 @@ static void bsp_uart3_init(void)
 		case 2 : uartConfig.stopBitCount = kUART_TwoStopBit;break;
 		default : uartConfig.stopBitCount = kUART_OneStopBit;break;
 	}
-	
+*/	
     uartConfig.enableTx = true;
     uartConfig.enableRx = true;
 
-    UART_Init(UART1, &uartConfig, CLOCK_GetFreq(kCLOCK_CoreSysClk));	
-	
-	
+    UART_Init(UART3, &uartConfig, CLOCK_GetFreq(kCLOCK_CoreSysClk));	
+
 	// -----------------------
 	
 	// --------open irq-------
-	UART_EnableInterrupts( UART1 ,kUART_TransmissionCompleteInterruptEnable);
-	UART_EnableInterrupts( UART1 ,kUART_RxDataRegFullInterruptEnable);
-	NVIC_SetPriority(UART1_RX_TX_IRQn , 7);
-	EnableIRQ(UART1_RX_TX_IRQn);
+	UART_EnableInterrupts( UART3 ,kUART_TransmissionCompleteInterruptEnable);
+	UART_EnableInterrupts( UART3 ,kUART_RxDataRegFullInterruptEnable);
+	NVIC_SetPriority(UART3_RX_TX_IRQn , 7);
+	EnableIRQ(UART3_RX_TX_IRQn);
 	// -----------------------
 	
 // -----------DMA ------------------------
   /* Init DMAMUX */
     DMAMUX_Init(DMAMUX0);
     /* Set channel for UART */
-    DMAMUX_SetSource(DMAMUX0, 0, kDmaRequestMux0UART1Tx);
+    DMAMUX_SetSource(DMAMUX0, 3, kDmaRequestMux0UART3Tx);
     
-    DMAMUX_EnableChannel(DMAMUX0, 0);
+    DMAMUX_EnableChannel(DMAMUX0, 3);
 
 
     /* Init the EDMA module */
     EDMA_GetDefaultConfig(&config);
     EDMA_Init(DMA0, &config);
-    EDMA_CreateHandle(&g_uartTxEdmaHandle, DMA0, 0);
+    EDMA_CreateHandle(&g_uart3TxEdmaHandle, DMA0, 0);
 
     /* Create UART DMA handle. */
-    UART_TransferCreateHandleEDMA(UART1, &g_uartEdmaHandle, UART_UserCallback, NULL, &g_uartTxEdmaHandle,
-                                  &g_uartRxEdmaHandle);
+    UART_TransferCreateHandleEDMA(UART3, &g_uart3EdmaHandle, UART3_UserCallback, NULL, &g_uart3TxEdmaHandle,
+                                  &g_uart3RxEdmaHandle);
 	NVIC_SetPriority(DMA0_IRQn , 7);
 // ---------------------------------------	
 }
@@ -532,29 +555,47 @@ void BSP_UART_WriteBytes_Blocking(uint8_t BSP_UARTX , uint8_t *buf, uint16_t len
 {
 	switch(BSP_UARTX)
 	{
-		case BSP_UART0 :;break;
+		case BSP_UART0 :UART_WriteBlocking(UART0, buf, len);break;
 		case BSP_UART1 :UART_WriteBlocking(UART1, buf, len);break;
 		case BSP_UART2 :UART_WriteBlocking(UART2, buf, len);break;
+		case BSP_UART3 :UART_WriteBlocking(UART3, buf, len);break;
 		default:break;
 	}
 }
-
+		// --------------
+static uint8_t uart0_send_space[300] = {0};
 static uint8_t uart1_send_space[300] = {0};
-
+static uint8_t uart3_send_space[300] = {0};
 void BSP_UART_WriteBytes_DMA(uint8_t BSP_UARTX , uint8_t *buf, uint16_t len)
 {
 	uart_transfer_t  xfer;
 	switch(BSP_UARTX)
 	{
-		case BSP_UART0:; break;
+		case BSP_UART0:
+			{
+				memcpy(uart0_send_space , buf , len);
+				xfer.data = uart0_send_space;
+				xfer.dataSize = len;	
+				UART_EnableInterrupts( UART0 ,kUART_TransmissionCompleteInterruptEnable);
+				UART_SendEDMA(UART0, &g_uart0EdmaHandle, &xfer);						
+			};break;
 		case BSP_UART1: 
-						memcpy(uart1_send_space , buf , len);
-						xfer.data = uart1_send_space;
-						xfer.dataSize = len;	
-						UART_EnableInterrupts( UART1 ,kUART_TransmissionCompleteInterruptEnable);
-						UART_SendEDMA(UART1, &g_uartEdmaHandle, &xfer);
-						break;
+			{
+				memcpy(uart1_send_space , buf , len);
+				xfer.data = uart1_send_space;
+				xfer.dataSize = len;	
+				UART_EnableInterrupts( UART1 ,kUART_TransmissionCompleteInterruptEnable);
+				UART_SendEDMA(UART1, &g_uart1EdmaHandle, &xfer);				
+			}break;
 		case BSP_UART2:; break;
+		case BSP_UART3:
+			{
+				memcpy(uart0_send_space , buf , len);
+				xfer.data = uart3_send_space;
+				xfer.dataSize = len;	
+				UART_EnableInterrupts( UART0 ,kUART_TransmissionCompleteInterruptEnable);
+				UART_SendEDMA(UART0, &g_uart3EdmaHandle, &xfer);					
+			}; break;
 		default:break;
 	}
 }
@@ -569,29 +610,27 @@ void BSP_UART_WriteBytes_DMA(uint8_t BSP_UARTX , uint8_t *buf, uint16_t len)
 
 // -----------IRQ--------------
 
-void UART2_IRQHandler(void)
+
+void UART0_RX_TX_IRQHandler(void)
 {
-	DEBUG("UART2_IRQHandler\r\n");
-	
-	if((UART_GetStatusFlags(UART2) & kUART_RxDataRegFullFlag )== kUART_RxDataRegFullFlag)
+	if(UART_GetStatusFlags(UART0) &kUART_TransmissionCompleteFlag )
 	{
-		UART_ClearStatusFlags(UART2, kUART_RxDataRegFullFlag);
-		
+		//DEBUG("kUART_TransmissionCompleteFlag\r\n");
+		UART_EnableTx(UART0, false);
+		UART0->C2 |= 0x01;
+		UART0->C2  &= (~0x01);
+		UART_EnableTx(UART0, true);
+		UART_DisableInterrupts( UART0 ,kUART_TransmissionCompleteInterruptEnable);
+	}
+	if(UART_GetStatusFlags(UART0) &kUART_RxDataRegFullFlag )
+	{
+//		DEBUG("kUART_RxDataRegFullFlag\r\n");
+
 		uint8_t c = 0;
-		c = UART_ReadByte(UART2);
-		DEBUG("Uart R:%X\r\n" , c);
+		c = UART_ReadByte(UART0);
+		DEBUG("Uart R:%X\r\n" , c);	 
 	}
 	
-	if((UART_GetStatusFlags(UART2) & kUART_RxActiveEdgeInterruptEnable )== kUART_RxActiveEdgeInterruptEnable)
-	{
-		UART2->S2 |= UART_S2_RXEDGIF(1);  
-	}	
-	
-}
-
-void UART0_IRQHandler(void)
-{
-
 }
 
 void UART1_ERR_IRQHandler(void)
@@ -616,14 +655,58 @@ void UART1_RX_TX_IRQHandler(void)
 //		DEBUG("Uart R:%X\r\n" , c);	
 //		uint8_t c = 0;
 //		c = UART_ReadByte(UART1);
-		ModbusRevOneByte(UART_ReadByte(UART1));
+
 	}
+}
+
+void UART3_RX_TX_IRQHandler(void)
+{
+	if(UART_GetStatusFlags(UART3) &kUART_TransmissionCompleteFlag )
+	{
+		//DEBUG("kUART_TransmissionCompleteFlag\r\n");
+		UART_EnableTx(UART3, false);
+		UART3->C2 |= 0x01;
+		UART3->C2  &= (~0x01);
+		UART_EnableTx(UART3, true);
+		UART_DisableInterrupts( UART3 ,kUART_TransmissionCompleteInterruptEnable);
+	}
+	if(UART_GetStatusFlags(UART3) &kUART_RxDataRegFullFlag )
+	{
+//		DEBUG("kUART_RxDataRegFullFlag\r\n");
+
+		uint8_t c = 0;
+		c = UART_ReadByte(UART3);
+		DEBUG("Uart R:%X\r\n" , c);	
+		
+	}
+}
+
+
+void UART2_IRQHandler(void)
+{
+	DEBUG("UART2_IRQHandler\r\n");
+	
+	if((UART_GetStatusFlags(UART2) & kUART_RxDataRegFullFlag )== kUART_RxDataRegFullFlag)
+	{
+		UART_ClearStatusFlags(UART2, kUART_RxDataRegFullFlag);
+		
+		uint8_t c = 0;
+		c = UART_ReadByte(UART2);
+		DEBUG("Uart R:%X\r\n" , c);
+	}
+	
+	if((UART_GetStatusFlags(UART2) & kUART_RxActiveEdgeInterruptEnable )== kUART_RxActiveEdgeInterruptEnable)
+	{
+		UART2->S2 |= UART_S2_RXEDGIF(1);  
+	}	
+	
 }
 
 void DMA0_IRQHandler(void)
 {
 
-	EDMA_HandleIRQ(&g_uartTxEdmaHandle);
+	EDMA_HandleIRQ(&g_uart0TxEdmaHandle);
+	EDMA_HandleIRQ(&g_uart3TxEdmaHandle);
 }
 
 // ----------------------------

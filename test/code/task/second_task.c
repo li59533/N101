@@ -13,8 +13,6 @@
 #include "second_task.h"
 #include "clog.h"
 
-
-
 /**
  * @addtogroup    XXX 
  * @{  
@@ -147,6 +145,10 @@ void Second_Task(void * pvParameter)
 {
 	UBaseType_t secondtask_ramainheap = 0;
 	//UBaseType_t ramainheap = 0;
+	
+	BSP_UART_Init(BSP_UART0);
+	BSP_UART_Init(BSP_UART3);
+	
 	DEBUG("Second Task Enter\r\n");
 	while(1)
 	{

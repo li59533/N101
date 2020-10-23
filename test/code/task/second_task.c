@@ -32,6 +32,8 @@
 #include "crc.h"
 #include "bsp_flash.h"
 
+#include "app_testcode.h"
+
 /**
  * @addtogroup    second_task_Modules 
  * @{  
@@ -148,6 +150,10 @@ void Second_Task(void * pvParameter)
 	
 	BSP_UART_Init(BSP_UART0);
 	BSP_UART_Init(BSP_UART3);
+	BSP_UART_Init(BSP_UART4);
+	
+	APP_Test_GpioInit();
+	APP_Test_NB_pStart();
 	
 	DEBUG("Second Task Enter\r\n");
 	while(1)
@@ -176,9 +182,12 @@ void Second_Task(void * pvParameter)
 //		
 //		ramainheap = uxTaskGetStackHighWaterMark(Hal_Task_Handle);
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
-		vTaskDelay(pdMS_TO_TICKS(3000));
 
-		
+		APP_Test_NB_PSMwakeup();
+			
+		vTaskDelay(pdMS_TO_TICKS(1000));
+
+		//APP_Test_U3send(0,0);
 	}
 	
 }

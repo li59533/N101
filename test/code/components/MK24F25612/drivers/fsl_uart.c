@@ -351,6 +351,7 @@ void UART_Deinit(UART_Type *base)
     /* Wait last char shoft out */
     while (0 == (base->S1 & UART_S1_TC_MASK))
     {
+		
     }
 
     /* Disable the module. */

@@ -18,6 +18,9 @@
  * @{ 
  */
 
+#include "rtos_tools.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /**
  * @addtogroup    app_testcode_Modules 
  * @{  
@@ -63,7 +66,11 @@
  * @defgroup      app_testcode_Exported_Functions 
  * @{  
  */
-
+ 
+void APP_Test_GpioInit(void);
+void APP_Test_NB_pStart(void); 
+void APP_Test_NB_PSMwakeup(void);
+void APP_Test_U3send(uint8_t * buf , uint16_t len);
 /**
  * @}
  */

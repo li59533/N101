@@ -146,8 +146,8 @@ static void bsp_spi1_init(void)
     masterConfig.whichCtar = kDSPI_Ctar0;
     masterConfig.ctarConfig.baudRate = 2000000U;
     masterConfig.ctarConfig.bitsPerFrame = 8U;
-    masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveHigh;
-    masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseFirstEdge;
+    masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveLow;
+    masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseSecondEdge;
     masterConfig.ctarConfig.direction = kDSPI_MsbFirst;
     masterConfig.ctarConfig.pcsToSckDelayInNanoSec = 1000000000U / 2000000U;
     masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = 500;

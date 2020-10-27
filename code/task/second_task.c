@@ -34,6 +34,10 @@
 #include "crc.h"
 #include "bsp_flash.h"
 
+#include "bsp_bc25.h"
+
+
+
 /**
  * @addtogroup    second_task_Modules 
  * @{  
@@ -148,6 +152,10 @@ void Second_Task(void * pvParameter)
 	UBaseType_t secondtask_ramainheap = 0;
 	//UBaseType_t ramainheap = 0;
 	DEBUG("Second Task Enter\r\n");
+	
+	
+	BSP_BC25_Init();
+	
 	while(1)
 	{
 		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);

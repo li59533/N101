@@ -63,6 +63,11 @@
  * @defgroup      bsp_bc25_Exported_Functions 
  * @{  
  */
+ 
+void BSP_BC25_Init(void); 
+ 
+void BSP_BC25_Send(uint8_t *buf , uint16_t len );
+ 
 void BSP_BC25_CMD_InQueue(uint8_t at_cmd);
 uint8_t BSP_BC25_CMD_OutQueue(void);
 void BSP_BC25_T_InQueue(uint8_t * buf ,uint16_t len);

@@ -142,7 +142,6 @@ void First_Task(void * pvParameter)
 	DEBUG("First Task Enter\r\n");
 	UBaseType_t firsttask_ramainheap = 0;
 
-	APP_RefreshMB_ConfParam();
 	while(1)
 	{
 		xTaskNotifyWait(0x00,ULONG_MAX,&event_flag , portMAX_DELAY);
@@ -152,12 +151,10 @@ void First_Task(void * pvParameter)
 			DEBUG("First Task Looping\r\n");
 			firsttask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
 			DEBUG("First Task ramain heap:%d %%\r\n",firsttask_ramainheap);
-	
 		}
 		if((event_flag & FIRST_TASK_TEST2_EVENT) != 0x00)
 		{
 			DEBUG("First Task FIRST_TASK_TEST2_EVENT\r\n");
-			
 		}		
 		
 		

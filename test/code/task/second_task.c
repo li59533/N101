@@ -185,7 +185,7 @@ void Second_Task(void * pvParameter)
 
 		APP_Test_NB_PSMwakeup();
 			
-		vTaskDelay(pdMS_TO_TICKS(1000));
+		vTaskDelay(pdMS_TO_TICKS(30000));
 
 		//APP_Test_U3send(0,0);
 	}

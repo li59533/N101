@@ -46,52 +46,53 @@ typedef enum
 	CMD_REQ = 0 ,
 	CMD_RESP = 1,
 	CMD_MODULE_IDLE = 2, 
-	CMD_MODULE_REST = 3,
-	CMD_AT_NULL = 4,
-	CMD_AT_REQ = 5,   /* AT*/
-	CMD_AT_RESP = 6,
-	CMD_ATE0_REQ = 7,   /* ATE0*/
-	CMD_ATE0_RESP = 8 ,	
-	CMD_AT_QSCLK0_REQ = 9, /*关闭深度睡眠*/
-	CMD_AT_QSCLK0_RESP = 10, 
-	CMD_AT_QSCLK1_REQ = 11, 
-	CMD_AT_QSCLK1_RESP = 12, 
-	CMD_AT_CFUN1_REQ = 13, 
-	CMD_AT_CFUN1_RESP = 14,
-	CMD_AT_CPIN_REQ = 15, 
-	CMD_AT_CPIN_RESP = 16, 
-	CMD_AT_QCCID_REQ = 17,
-	CMD_AT_QCCID_RESP = 18,
-	CMD_AT_CIMI_REQ = 19, 
-	CMD_AT_CIMI_RESP = 20, 
-	CMD_AT_CGSN1_REQ = 21, 
-	CMD_AT_CGSN1_RESP = 22, 
-	CMD_AT_CSQ_REQ = 23, 
-	CMD_AT_CSQ_RESP = 24,
-	CMD_AT_QBAND15_REQ = 25, 
-	CMD_AT_QBAND15_RESP = 26,
-	CMD_AT_CEREG1_REQ = 27, 
-	CMD_AT_CEREG1_RESP = 28, 
-	CMD_AT_CGATT1_REQ = 29, 
-	CMD_AT_CGATT1_RESP = 30, 
-	CMD_AT_CGATT_REQ = 31, 
-	CMD_AT_CGATT_RESP = 32,
-	CMD_AT_CGACT11_REQ = 33,
-	CMD_AT_CGACT11_RESP = 34, 
-	CMD_AT_CGPADDR_REQ = 35, 
-	CMD_AT_CGPADDR_RESP  = 36, 
-	CMD_AT_NCFG0_REQ = 37, 
-	CMD_AT_NCFG0_RESP = 38,
-	CMD_AT_NCDPOPEN_REQ = 39, 
-	CMD_AT_NCDPOPEN_RESP = 40, 
-	CMD_AT_NMSTATUS_REQ  = 41, 
-	CMD_AT_NMSTATUS_RESP = 42, 
-	CMD_AT_NNMI2_REQ = 43, 
-	CMD_AT_NNMI2_RESP = 44,
-	CMD_AT_NCDPCLOSE_REQ = 45, /*断开模块与平台的连接*/
-	CMD_AT_NCDPCLOSE_RESP = 46, 
+	CMD_MODULE_REST_REQ = 3,
+	CMD_MODULE_REST_RESP ,
+	CMD_AT_NULL ,
+	CMD_AT_REQ ,   /* AT*/
+	CMD_AT_RESP ,
+	CMD_ATE0_REQ ,   /* ATE0*/
+	CMD_ATE0_RESP ,	
+	CMD_AT_QSCLK0_REQ , /*关闭深度睡眠*/
+	CMD_AT_QSCLK0_RESP , 
+	CMD_AT_QSCLK1_REQ , 
+	CMD_AT_QSCLK1_RESP , 
+	CMD_AT_CFUN1_REQ , 
+	CMD_AT_CFUN1_RESP ,
+	CMD_AT_CPIN_REQ , 
+	CMD_AT_CPIN_RESP , 
+	CMD_AT_QCCID_REQ ,
+	CMD_AT_QCCID_RESP ,
+	CMD_AT_CIMI_REQ , 
+	CMD_AT_CIMI_RESP , 
+	CMD_AT_CGSN1_REQ , 
+	CMD_AT_CGSN1_RESP , 
+	CMD_AT_CSQ_REQ , 
+	CMD_AT_CSQ_RESP ,
+	CMD_AT_QBAND15_REQ , 
+	CMD_AT_QBAND15_RESP ,
+	CMD_AT_CEREG1_REQ , 
+	CMD_AT_CEREG1_RESP , 
+	CMD_AT_CGATT1_REQ , 
+	CMD_AT_CGATT1_RESP , 
+	CMD_AT_CGATT_REQ , 
+	CMD_AT_CGATT_RESP ,
+	CMD_AT_CGACT11_REQ ,
+	CMD_AT_CGACT11_RESP , 
+	CMD_AT_CGPADDR_REQ , 
+	CMD_AT_CGPADDR_RESP , 
+	CMD_AT_NCFG0_REQ , 
+	CMD_AT_NCFG0_RESP ,
+	CMD_AT_NCDPOPEN_REQ , 
+	CMD_AT_NCDPOPEN_RESP , 
+	CMD_AT_NMSTATUS_REQ  , 
+	CMD_AT_NMSTATUS_RESP , 
+	CMD_AT_NNMI2_REQ , 
+	CMD_AT_NNMI2_RESP ,
+	CMD_AT_NCDPCLOSE_REQ , /*断开模块与平台的连接*/
+	CMD_AT_NCDPCLOSE_RESP , 
 	
-	CMD_AT_PSM_WAKEUP = 47,
+	CMD_AT_PSM_WAKEUP ,
 	 
 }BSP_BC25_ATcmd_e;
 
@@ -124,7 +125,7 @@ const char nb_AT_QBAND15[] = "AT+QBAND=1,5\r\n";
 const char nb_AT_CEREG1[] = "AT+CEREG=1\r\n";
 const char nb_AT_CGATT1[] = "AT+CGATT=1\r\n";
 const char nb_AT_CGATT[] = "AT+CGATT?\r\n";
-const char nb_AT_CGACT11[] = "AT+CGACT=1,1";
+const char nb_AT_CGACT11[] = "AT+CGACT=1,1\r\n";
 const char nb_AT_CGADDR[] = "AT+CGPADDR?\r\n";
 const char nb_AT_NCFG0[] = "AT+NCFG=0,20\r\n";
 const char nb_AT_NCDPOPEN[] = "AT+NCDPOPEN=\"221.229.214.202\",5683\r\n";
@@ -323,6 +324,7 @@ void BSP_BC25_Send(uint8_t *buf , uint16_t len )
 {
 	DEBUG("send:%s\r\n" , (char *)buf);
 	BSP_UART_WriteBytes_DMA(BSP_UART3 , buf,  len);
+	BSP_UART_WriteBytes_DMA(BSP_UART0 , buf,  len);
 }
 
 void BSP_BC25_Rev_Process(uint8_t * buf , uint16_t len )
@@ -355,16 +357,55 @@ void BSP_BC25_Loop(void)
 		{
 
 			BSP_BC25_Info.cur_cmdreq = BSP_BC25_CMD_OutQueue();
-			
+			BSP_BC25_Info.cur_cmd_timeout_count = 3;
 		}break;
 		case CMD_MODULE_IDLE:
 		{
 			
 			DEBUG("CMD_MODULE_IDLE\r\n");
 		}break;
-		case CMD_MODULE_REST:
+		case CMD_MODULE_REST_REQ:
+		{ 
+			
+			//BSP_BC25_Send((uint8_t *)nb_AT_QRST1 ,strlen(nb_AT_QRST1));
+			BSP_BC25_Send((uint8_t *)nb_AT_QRST1 ,strlen(nb_AT_QRST1));
+			BSP_BC25_Info.cur_cmdresp = CMD_MODULE_REST_RESP;
+			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
+			BSP_BC25_Info.cur_cmdtimout = 10000;
+			DEBUG("CMD_MODULE_REST_REQ\r\n");
+		}break;
+		case CMD_MODULE_REST_RESP:
 		{
-			DEBUG("CMD_MODULE_REST\r\n");
+			BSP_BC25_Info.cur_cmdtimout -= 20;
+
+			if(BSP_BC25_R_GetQueueCount() > 0)
+			{
+				BSP_BC25_R_OutQueue( rev_buf , &rev_len);
+				if(rev_len > 0)
+				{
+					if(strstr( (const char *)rev_buf , "+CFUN: 1") != NULL)
+					{
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_REQ;
+						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
+					}
+				}
+			}
+
+			if(BSP_BC25_Info.cur_cmdtimout == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				if(BSP_BC25_Info.cur_cmd_timeout_count > 0)
+				{
+					BSP_BC25_Info.cur_cmd_timeout_count --;	
+				}
+			}
+			
+			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
+			}			
 		}break;
 		case CMD_AT_REQ :   /* AT*/
 		{
@@ -373,7 +414,6 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;
 		}break;
 		case CMD_AT_RESP:
 		{
@@ -388,6 +428,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_ATE0_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -404,7 +445,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}
 		}break;
 		case CMD_ATE0_REQ:
@@ -413,8 +454,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_ATE0 ,strlen(nb_ATE0));
 			BSP_BC25_Info.cur_cmdresp = CMD_ATE0_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_ATE0_RESP:
 		{
@@ -429,6 +469,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_QSCLK0_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -445,7 +486,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}			
 		}break;
 		case CMD_AT_QSCLK0_REQ : /*关闭深度睡眠*/
@@ -454,8 +495,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_QSCLK0 ,strlen(nb_AT_QSCLK0));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_QSCLK0_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;			
+			BSP_BC25_Info.cur_cmdtimout = 300;		
 		}break;
 		case CMD_AT_QSCLK0_RESP:
 		{
@@ -470,6 +510,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CFUN1_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -486,7 +527,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}			
 		}break;		
 		case CMD_AT_CFUN1_REQ:
@@ -496,7 +537,6 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CFUN1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;
 		}break;
 		case CMD_AT_CFUN1_RESP:
 		{
@@ -511,6 +551,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CPIN_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -527,7 +568,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}					
 		}break;			
 		case CMD_AT_CPIN_REQ:
@@ -536,8 +577,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CPIN ,strlen(nb_AT_CPIN));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CPIN_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;			
+			BSP_BC25_Info.cur_cmdtimout = 3000;		
 		}break;
 		case CMD_AT_CPIN_RESP:
 		{
@@ -552,6 +592,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_QCCID_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -568,7 +609,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}					
 		}break;
 		case CMD_AT_QCCID_REQ:
@@ -577,8 +618,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_QCCID ,strlen(nb_AT_QCCID));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_QCCID_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;		
 		}break;
 		case CMD_AT_QCCID_RESP:
 		{
@@ -593,6 +633,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CIMI_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -609,7 +650,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}					
 		}break;
 		case CMD_AT_CIMI_REQ:
@@ -618,8 +659,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CIMI ,strlen(nb_AT_CIMI));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CIMI_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;		
 		}break;
 		case CMD_AT_CIMI_RESP:
 		{
@@ -634,6 +674,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGSN1_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -650,7 +691,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}					
 		}break;
 		case CMD_AT_CGSN1_REQ:
@@ -659,8 +700,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGSN1 ,strlen(nb_AT_CGSN1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGSN1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;		
 		}break;
 		case CMD_AT_CGSN1_RESP:
 		{
@@ -675,6 +715,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CSQ_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -691,7 +732,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}								
 		}break;
 		case CMD_AT_CSQ_REQ:
@@ -700,8 +741,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CSQ ,strlen(nb_AT_CSQ));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CSQ_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;		
 		}break;
 		case CMD_AT_CSQ_RESP:
 		{
@@ -716,6 +756,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_QBAND15_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -732,7 +773,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}						
 		}break;
 		case CMD_AT_QBAND15_REQ:
@@ -741,8 +782,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_QBAND15 ,strlen(nb_AT_QBAND15));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_QBAND15_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_QBAND15_RESP:
 		{
@@ -757,6 +797,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CEREG1_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -773,7 +814,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}					
 		}break;
 		case CMD_AT_CEREG1_REQ:
@@ -782,8 +823,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CEREG1 ,strlen(nb_AT_CEREG1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CEREG1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_CEREG1_RESP:
 		{
@@ -798,6 +838,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGATT1_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -814,7 +855,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}				
 		}break;
 		case CMD_AT_CGATT1_REQ:
@@ -823,8 +864,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_CGATT1_RESP:
 		{
@@ -839,6 +879,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGATT_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -855,7 +896,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}				
 		}break;
 		case CMD_AT_CGATT_REQ:
@@ -864,8 +905,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_CGATT_RESP:
 		{
@@ -880,6 +920,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGACT11_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -896,17 +937,17 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}						
 		}break;
 		case CMD_AT_CGACT11_REQ:
 		{
 			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGACT11 ,strlen(nb_AT_CGACT11));
-			BSP_BC25_Send((uint8_t *)nb_AT   _CGACT11 ,strlen(nb_AT_CGACT11));
+			BSP_BC25_Send((uint8_t *)nb_AT_CGACT11 ,strlen(nb_AT_CGACT11));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGACT11_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 65000;
+							
 		}break;
 		case CMD_AT_CGACT11_RESP:
 		{
@@ -921,6 +962,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGPADDR_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -937,7 +979,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}					
 		}break;
 		case CMD_AT_CGPADDR_REQ:
@@ -946,8 +988,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGADDR ,strlen(nb_AT_CGADDR));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGPADDR_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_CGPADDR_RESP:
 		{
@@ -962,6 +1003,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_NCFG0_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -978,7 +1020,7 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}				
 		}break;
 		case CMD_AT_NCFG0_REQ:
@@ -987,8 +1029,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_NCFG0_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;
-			BSP_BC25_Info.cur_cmd_timeout_count = 3;				
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_NCFG0_RESP:
 		{
@@ -1003,6 +1044,7 @@ void BSP_BC25_Loop(void)
 					{
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_NCDPOPEN_REQ;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
 				}
 			}
@@ -1011,7 +1053,7 @@ void BSP_BC25_Loop(void)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 				if(BSP_BC25_Info.cur_cmd_timeout_count > 0)
-				{
+				{ 
 					BSP_BC25_Info.cur_cmd_timeout_count --;	
 				}
 			}	
@@ -1019,19 +1061,132 @@ void BSP_BC25_Loop(void)
 			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
 			{
 				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
 			}				
 		}break;
 		case CMD_AT_NCDPOPEN_REQ:
 		{
-			
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
+			BSP_BC25_Send((uint8_t *)nb_AT_NCDPOPEN ,strlen(nb_AT_NCDPOPEN));
+			BSP_BC25_Info.cur_cmdresp = CMD_AT_NCDPOPEN_RESP;
+			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
+			BSP_BC25_Info.cur_cmdtimout = 10000;				
 		}break;
 		case CMD_AT_NCDPOPEN_RESP:
 		{
+			BSP_BC25_Info.cur_cmdtimout -= 20;
+
+			if(BSP_BC25_R_GetQueueCount() > 0)
+			{
+				BSP_BC25_R_OutQueue( rev_buf , &rev_len);
+				if(rev_len > 0)
+				{
+					if(strstr( (const char *)rev_buf , "+QLWEVTIND: 3") != NULL)
+					{
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NCDPOPEN_REQ;
+						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
+					}
+				}
+			}
+
+			if(BSP_BC25_Info.cur_cmdtimout == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				if(BSP_BC25_Info.cur_cmd_timeout_count > 0)
+				{ 
+					BSP_BC25_Info.cur_cmd_timeout_count --;	
+				}
+			}	
 			
+			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
+			}					
 		}break;
-		
-		
+		case CMD_AT_NMSTATUS_REQ:
+		{
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
+			BSP_BC25_Send((uint8_t *)nb_AT_NMSTATUS ,strlen(nb_AT_NMSTATUS));
+			BSP_BC25_Info.cur_cmdresp = CMD_AT_NMSTATUS_RESP;
+			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
+			BSP_BC25_Info.cur_cmdtimout = 10000;				
+		}break;
+		case CMD_AT_NMSTATUS_RESP:
+		{
+			BSP_BC25_Info.cur_cmdtimout -= 20;
+
+			if(BSP_BC25_R_GetQueueCount() > 0)
+			{
+				BSP_BC25_R_OutQueue( rev_buf , &rev_len);
+				if(rev_len > 0)
+				{
+					if(strstr( (const char *)rev_buf , "REGISTERED_AND_OBSERVED") != NULL)
+					{
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NMSTATUS_REQ;
+						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
+					}
+				}
+			}
+
+			if(BSP_BC25_Info.cur_cmdtimout == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				if(BSP_BC25_Info.cur_cmd_timeout_count > 0)
+				{ 
+					BSP_BC25_Info.cur_cmd_timeout_count --;	
+				}
+			}	
+			
+			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
+			}				
+		}break;
+		case CMD_AT_NCDPCLOSE_REQ:
+		{
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
+			BSP_BC25_Send((uint8_t *)nb_AT_NCDPCLOSE ,strlen(nb_AT_NCDPCLOSE));
+			BSP_BC25_Info.cur_cmdresp = CMD_AT_NCDPCLOSE_RESP;
+			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
+			BSP_BC25_Info.cur_cmdtimout = 10000;				
+		}break;
+		case CMD_AT_NCDPCLOSE_RESP:
+		{
+			BSP_BC25_Info.cur_cmdtimout -= 20;
+
+			if(BSP_BC25_R_GetQueueCount() > 0)
+			{
+				BSP_BC25_R_OutQueue( rev_buf , &rev_len);
+				if(rev_len > 0)
+				{
+					if(strstr( (const char *)rev_buf , "OK") != NULL)
+					{
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NMSTATUS_REQ;
+						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+						BSP_BC25_Info.cur_cmd_timeout_count = 3;
+					}
+				}
+			}
+
+			if(BSP_BC25_Info.cur_cmdtimout == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				if(BSP_BC25_Info.cur_cmd_timeout_count > 0)
+				{ 
+					BSP_BC25_Info.cur_cmd_timeout_count --;	
+				}
+			}	
+			
+			if(BSP_BC25_Info.cur_cmd_timeout_count == 0)
+			{
+				BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+				BSP_BC25_Info.cur_cmdreq = CMD_MODULE_REST_REQ;
+			}				
+		}break;
 		default:break;
 	}
 	

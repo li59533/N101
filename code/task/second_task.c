@@ -154,7 +154,7 @@ void Second_Task(void * pvParameter)
 	DEBUG("Second Task Enter\r\n");
 	
 	
-	BSP_BC25_Init();
+	
 	
 	while(1)
 	{

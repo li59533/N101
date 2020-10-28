@@ -738,7 +738,7 @@ void BSP_UART_WriteBytes_DMA(uint8_t BSP_UARTX , uint8_t *buf, uint16_t len)
 				xfer.data = uart4_send_space;
 				xfer.dataSize = len;	
 				UART_EnableInterrupts( UART4 ,kUART_TransmissionCompleteInterruptEnable);
-				UART_SendEDMA(UART4, &g_uart3EdmaHandle, &xfer);					
+				UART_SendEDMA(UART4, &g_uart4EdmaHandle, &xfer);					
 			}; break;			
 		default:break;
 	}

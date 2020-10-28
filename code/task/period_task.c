@@ -148,7 +148,7 @@ void Period_Task(void * pvParameter)
 {
 	DEBUG("Period Task Enter\r\n");
 	
-	
+	BSP_BC25_Init();
 	
 	while(1)
 	{

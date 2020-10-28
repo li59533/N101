@@ -31,6 +31,10 @@
 
 
 #include "bsp_lmt01.h"
+
+
+#include "bsp_bc25.h"
+
 /**
  * @addtogroup    period_task_Modules 
  * @{  
@@ -143,12 +147,15 @@ uint32_t Period_Task_Init(void)
 void Period_Task(void * pvParameter)
 {
 	DEBUG("Period Task Enter\r\n");
-	BSP_LMT01_Power_ON();
+	
+	
+	
 	while(1)
 	{
 		//DEBUG("Period Task Looping\r\n");
-		BSP_LMT01_CoreLoop();
+		
 		RTOS_Delay_ms(20);
+		BSP_BC25_Loop();
 	}
 	
 }

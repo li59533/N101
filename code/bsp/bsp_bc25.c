@@ -44,52 +44,55 @@
 typedef enum
 {
 	CMD_REQ = 0 ,
-	CMD_RESP ,
-	CMD_MODULE_IDLE , 
-	CMD_MODULE_REST ,
-	CMD_AT_NULL ,
-	CMD_AT_REQ ,   /* AT*/
-	CMD_AT_RESP ,
-	CMD_ATE0_REQ ,   /* ATE0*/
-	CMD_ATE0_RESP ,	
-	CMD_AT_QSCLK0_REQ , /*关闭深度睡眠*/
-	CMD_AT_QSCLK0_RESP , 
-	CMD_AT_QSCLK1_REQ , 
-	CMD_AT_QSCLK1_RESP , 
-	CMD_AT_CFUN1_REQ , 
-	CMD_AT_CFUN1_RESP ,
-	CMD_AT_CPIN_REQ , 
-	CMD_AT_CPIN_RESP , 
-	CMD_AT_QCCID_REQ ,
-	CMD_AT_QCCID_RESP ,
-	CMD_AT_CIMI_REQ , 
-	CMD_AT_CIMI_RESP , 
-	CMD_AT_CGSN1_REQ , 
-	CMD_AT_CGSN1_RESP , 
-	CMD_AT_CSQ_REQ , 
-	CMD_AT_CSQ_RESP ,
-	CMD_AT_QBAND15_REQ , 
-	CMD_AT_QBAND15_RESP ,
-	CMD_AT_CEREG1_REQ , 
-	CMD_AT_CEREG1_RESP , 
-	CMD_AT_CGATT1_REQ , 
-	CMD_AT_CGATT1_RESP , 
-	CMD_AT_CGATT_REQ , 
-	CMD_AT_CGATT_RESP ,
-	CMD_AT_CGACT11_REQ ,
-	CMD_AT_CGACT11_RESP , 
-	CMD_AT_CGPADDR_REQ , 
-	CMD_AT_CGPADDR_RESP  , 
-	CMD_AT_NCFG0_REQ , 
-	CMD_AT_NCFG0_RESP ,
-	CMD_AT_NCDPOPEN_REQ , 
-	CMD_AT_NCDPOPEN_RESP , 
-	CMD_AT_NMSTATUS_REQ  , 
-	CMD_AT_NMSTATUS_RESP , 
-	CMD_AT_NNMI2_REQ , 
-	CMD_AT_NNMI2_RESP ,
-	CMD_AT_NCDPCLOSE_REQ , /*断开模块与平台的连接*/
-	CMD_AT_NCDPCLOSE_RESP , 
+	CMD_RESP = 1,
+	CMD_MODULE_IDLE = 2, 
+	CMD_MODULE_REST = 3,
+	CMD_AT_NULL = 4,
+	CMD_AT_REQ = 5,   /* AT*/
+	CMD_AT_RESP = 6,
+	CMD_ATE0_REQ = 7,   /* ATE0*/
+	CMD_ATE0_RESP = 8 ,	
+	CMD_AT_QSCLK0_REQ = 9, /*关闭深度睡眠*/
+	CMD_AT_QSCLK0_RESP = 10, 
+	CMD_AT_QSCLK1_REQ = 11, 
+	CMD_AT_QSCLK1_RESP = 12, 
+	CMD_AT_CFUN1_REQ = 13, 
+	CMD_AT_CFUN1_RESP = 14,
+	CMD_AT_CPIN_REQ = 15, 
+	CMD_AT_CPIN_RESP = 16, 
+	CMD_AT_QCCID_REQ = 17,
+	CMD_AT_QCCID_RESP = 18,
+	CMD_AT_CIMI_REQ = 19, 
+	CMD_AT_CIMI_RESP = 20, 
+	CMD_AT_CGSN1_REQ = 21, 
+	CMD_AT_CGSN1_RESP = 22, 
+	CMD_AT_CSQ_REQ = 23, 
+	CMD_AT_CSQ_RESP = 24,
+	CMD_AT_QBAND15_REQ = 25, 
+	CMD_AT_QBAND15_RESP = 26,
+	CMD_AT_CEREG1_REQ = 27, 
+	CMD_AT_CEREG1_RESP = 28, 
+	CMD_AT_CGATT1_REQ = 29, 
+	CMD_AT_CGATT1_RESP = 30, 
+	CMD_AT_CGATT_REQ = 31, 
+	CMD_AT_CGATT_RESP = 32,
+	CMD_AT_CGACT11_REQ = 33,
+	CMD_AT_CGACT11_RESP = 34, 
+	CMD_AT_CGPADDR_REQ = 35, 
+	CMD_AT_CGPADDR_RESP  = 36, 
+	CMD_AT_NCFG0_REQ = 37, 
+	CMD_AT_NCFG0_RESP = 38,
+	CMD_AT_NCDPOPEN_REQ = 39, 
+	CMD_AT_NCDPOPEN_RESP = 40, 
+	CMD_AT_NMSTATUS_REQ  = 41, 
+	CMD_AT_NMSTATUS_RESP = 42, 
+	CMD_AT_NNMI2_REQ = 43, 
+	CMD_AT_NNMI2_RESP = 44,
+	CMD_AT_NCDPCLOSE_REQ = 45, /*断开模块与平台的连接*/
+	CMD_AT_NCDPCLOSE_RESP = 46, 
+	
+	CMD_AT_PSM_WAKEUP = 47,
+	 
 }BSP_BC25_ATcmd_e;
 
 typedef enum
@@ -255,15 +258,19 @@ BSP_BC25_Info_t BSP_BC25_Info =
 
 void BSP_BC25_Init(void)
 {
+	DEBUG("bsp_bc25 init\r\n");
 	BSP_UART_Init(BSP_UART0);
 	BSP_UART_Init(BSP_UART3);
 	
 	BSP_BC25_GpioInit();
 	BSP_BC25_NB_pStart();
+	
+	BSP_BC25_CMD_InQueue(CMD_AT_REQ);
 }
 
 static void BSP_BC25_GpioInit(void)
 {
+	DEBUG("bc25 gpio init\r\n");
 	gpio_pin_config_t config =
 	{
 		kGPIO_DigitalOutput,
@@ -291,6 +298,7 @@ static void BSP_BC25_GpioInit(void)
 
 static void BSP_BC25_NB_pStart(void)
 {
+	DEBUG("bc25 power start\r\n");
 	GPIO_PinWrite(GPIOC, 12, 0);
 	GPIO_PinWrite(GPIOC, 12, 1);
 	RTOS_Delay_ms(1200);
@@ -303,6 +311,7 @@ static void BSP_BC25_NB_pStart(void)
 
 void BSP_BC25_NB_PSMwakeup(void)
 {
+	DEBUG("bc25 PSM wakeup\r\n");
 	GPIO_PinWrite(GPIOC, 11, 1);
 	RTOS_Delay_ms(100);
 	GPIO_PinWrite(GPIOC, 11, 0);
@@ -312,6 +321,7 @@ void BSP_BC25_NB_PSMwakeup(void)
 
 void BSP_BC25_Send(uint8_t *buf , uint16_t len )
 {
+	DEBUG("send:%s\r\n" , (char *)buf);
 	BSP_UART_WriteBytes_DMA(BSP_UART3 , buf,  len);
 }
 
@@ -343,6 +353,7 @@ void BSP_BC25_Loop(void)
 	{
 		case CMD_AT_NULL:
 		{
+
 			BSP_BC25_Info.cur_cmdreq = BSP_BC25_CMD_OutQueue();
 			
 		}break;
@@ -398,8 +409,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_ATE0_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_ATE0 ,strlen(nb_ATE0));
-			BSP_BC25_T_InQueue((uint8_t *)nb_ATE0 ,strlen(nb_ATE0));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_ATE0 ,strlen(nb_ATE0));
+			BSP_BC25_Send((uint8_t *)nb_ATE0 ,strlen(nb_ATE0));
 			BSP_BC25_Info.cur_cmdresp = CMD_ATE0_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -439,8 +450,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_QSCLK0_REQ : /*关闭深度睡眠*/
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_QSCLK0 ,strlen(nb_AT_QSCLK0));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_QSCLK0 ,strlen(nb_AT_QSCLK0));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_QSCLK0 ,strlen(nb_AT_QSCLK0));
+			BSP_BC25_Send((uint8_t *)nb_AT_QSCLK0 ,strlen(nb_AT_QSCLK0));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_QSCLK0_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -480,8 +491,8 @@ void BSP_BC25_Loop(void)
 		}break;		
 		case CMD_AT_CFUN1_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CFUN1 ,strlen(nb_AT_CFUN1));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CFUN1 ,strlen(nb_AT_CFUN1));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CFUN1 ,strlen(nb_AT_CFUN1));
+			BSP_BC25_Send((uint8_t *)nb_AT_CFUN1 ,strlen(nb_AT_CFUN1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CFUN1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -521,8 +532,8 @@ void BSP_BC25_Loop(void)
 		}break;			
 		case CMD_AT_CPIN_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CPIN ,strlen(nb_AT_CPIN));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CPIN ,strlen(nb_AT_CPIN));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CPIN ,strlen(nb_AT_CPIN));
+			BSP_BC25_Send((uint8_t *)nb_AT_CPIN ,strlen(nb_AT_CPIN));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CPIN_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -562,8 +573,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_QCCID_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_QCCID ,strlen(nb_AT_QCCID));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_QCCID ,strlen(nb_AT_QCCID));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_QCCID ,strlen(nb_AT_QCCID));
+			BSP_BC25_Send((uint8_t *)nb_AT_QCCID ,strlen(nb_AT_QCCID));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_QCCID_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -603,8 +614,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CIMI_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CIMI ,strlen(nb_AT_CIMI));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CIMI ,strlen(nb_AT_CIMI));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CIMI ,strlen(nb_AT_CIMI));
+			BSP_BC25_Send((uint8_t *)nb_AT_CIMI ,strlen(nb_AT_CIMI));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CIMI_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -644,8 +655,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CGSN1_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGSN1 ,strlen(nb_AT_CGSN1));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGSN1 ,strlen(nb_AT_CGSN1));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGSN1 ,strlen(nb_AT_CGSN1));
+			BSP_BC25_Send((uint8_t *)nb_AT_CGSN1 ,strlen(nb_AT_CGSN1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGSN1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -685,8 +696,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CSQ_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CSQ ,strlen(nb_AT_CSQ));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CSQ ,strlen(nb_AT_CSQ));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CSQ ,strlen(nb_AT_CSQ));
+			BSP_BC25_Send((uint8_t *)nb_AT_CSQ ,strlen(nb_AT_CSQ));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CSQ_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -726,8 +737,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_QBAND15_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_QBAND15 ,strlen(nb_AT_QBAND15));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_QBAND15 ,strlen(nb_AT_QBAND15));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_QBAND15 ,strlen(nb_AT_QBAND15));
+			BSP_BC25_Send((uint8_t *)nb_AT_QBAND15 ,strlen(nb_AT_QBAND15));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_QBAND15_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -767,8 +778,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CEREG1_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CEREG1 ,strlen(nb_AT_CEREG1));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CEREG1 ,strlen(nb_AT_CEREG1));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CEREG1 ,strlen(nb_AT_CEREG1));
+			BSP_BC25_Send((uint8_t *)nb_AT_CEREG1 ,strlen(nb_AT_CEREG1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CEREG1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -808,8 +819,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CGATT1_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
+			BSP_BC25_Send((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -849,8 +860,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CGATT_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
+			BSP_BC25_Send((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -890,8 +901,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CGACT11_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGACT11 ,strlen(nb_AT_CGACT11));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGACT11 ,strlen(nb_AT_CGACT11));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGACT11 ,strlen(nb_AT_CGACT11));
+			BSP_BC25_Send((uint8_t *)nb_AT   _CGACT11 ,strlen(nb_AT_CGACT11));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGACT11_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -931,8 +942,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_CGPADDR_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGADDR ,strlen(nb_AT_CGADDR));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGADDR ,strlen(nb_AT_CGADDR));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_CGADDR ,strlen(nb_AT_CGADDR));
+			BSP_BC25_Send((uint8_t *)nb_AT_CGADDR ,strlen(nb_AT_CGADDR));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGPADDR_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;
@@ -972,8 +983,8 @@ void BSP_BC25_Loop(void)
 		}break;
 		case CMD_AT_NCFG0_REQ:
 		{
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
-			BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
+			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
+			BSP_BC25_Send((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_NCFG0_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
 			BSP_BC25_Info.cur_cmdtimout = 300;

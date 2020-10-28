@@ -158,11 +158,11 @@ void Second_Task(void * pvParameter)
 	
 	while(1)
 	{
-		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
-		DEBUG("Second Task ramain heap:%d %%\r\n",secondtask_ramainheap);		
+//		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+//		DEBUG("Second Task ramain heap:%d %%\r\n",secondtask_ramainheap);		
 		
 		DEBUG("Second Task Looping\r\n");
-		DEBUG("Free Heap:%d\r\n" , RTOS_Get_FreeHeapSize());
+//		DEBUG("Free Heap:%d\r\n" , RTOS_Get_FreeHeapSize());
 		
 //		ramainheap = uxTaskGetStackHighWaterMark(First_Task_Handle);
 //		DEBUG("First Task ramain heap:%d\r\n",ramainheap);
@@ -182,9 +182,9 @@ void Second_Task(void * pvParameter)
 //		
 //		ramainheap = uxTaskGetStackHighWaterMark(Hal_Task_Handle);
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
-		vTaskDelay(pdMS_TO_TICKS(3000));
+		vTaskDelay(pdMS_TO_TICKS(30000));
 
-		
+		BSP_BC25_NB_PSMwakeup();
 	}
 	
 }

@@ -118,7 +118,7 @@ void RTOS_Init(void)
 
 	//basetype = Hal_Task_Init();
 	basetype = First_Task_Init();
-	//basetype = Period_Task_Init();
+	basetype = Period_Task_Init();
 	
 	//vTaskStartScheduler();
 	if(pdPASS == basetype)

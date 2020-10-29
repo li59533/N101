@@ -28,7 +28,7 @@
 #include "sample_task.h"
 #include "refresh_task.h"
 #include "hal_task.h"
-
+#include "net_task.h"
 
 #include "bsp_lmt01.h"
 
@@ -155,7 +155,7 @@ void Period_Task(void * pvParameter)
 		//DEBUG("Period Task Looping\r\n");
 		
 		RTOS_Delay_ms(20);
-		BSP_BC25_Loop();
+		Net_Task_Event_Start(NET_TASK_BC25_LOOP_EVENT, EVENT_FROM_TASK);
 	}
 	
 }

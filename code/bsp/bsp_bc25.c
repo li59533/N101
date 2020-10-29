@@ -266,7 +266,7 @@ void BSP_BC25_Init(void)
 	BSP_BC25_GpioInit();
 	BSP_BC25_NB_pStart();
 	
-	BSP_BC25_CMD_InQueue(CMD_AT_REQ);
+	BSP_BC25_CMD_InQueue(CMD_MODULE_REST_REQ);
 }
 
 static void BSP_BC25_GpioInit(void)
@@ -355,18 +355,15 @@ void BSP_BC25_Loop(void)
 	{
 		case CMD_AT_NULL:
 		{
-
 			BSP_BC25_Info.cur_cmdreq = BSP_BC25_CMD_OutQueue();
 			BSP_BC25_Info.cur_cmd_timeout_count = 3;
 		}break;
 		case CMD_MODULE_IDLE:
 		{
-			
 			DEBUG("CMD_MODULE_IDLE\r\n");
 		}break;
 		case CMD_MODULE_REST_REQ:
 		{ 
-			
 			//BSP_BC25_Send((uint8_t *)nb_AT_QRST1 ,strlen(nb_AT_QRST1));
 			BSP_BC25_Send((uint8_t *)nb_AT_QRST1 ,strlen(nb_AT_QRST1));
 			BSP_BC25_Info.cur_cmdresp = CMD_MODULE_REST_RESP;
@@ -383,9 +380,10 @@ void BSP_BC25_Loop(void)
 				BSP_BC25_R_OutQueue( rev_buf , &rev_len);
 				if(rev_len > 0)
 				{
-					if(strstr( (const char *)rev_buf , "+CFUN: 1") != NULL)
+					if(strstr( (const char *)rev_buf , "CPIN: READY") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -426,7 +424,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_ATE0_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_ATE0_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -467,7 +466,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_QSCLK0_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_QSCLK0_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -508,7 +508,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CFUN1_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CFUN1_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -549,7 +550,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CPIN_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CPIN_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -590,7 +592,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+CPIN: READY") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_QCCID_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_QCCID_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -631,7 +634,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+QCCID:") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CIMI_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CIMI_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -672,7 +676,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGSN1_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CGSN1_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -713,7 +718,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+CGSN:") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CSQ_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CSQ_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -754,9 +760,20 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+CSQ:") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_QBAND15_REQ;
-						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
-						BSP_BC25_Info.cur_cmd_timeout_count = 3;
+						if(strstr( (const char *)rev_buf , "+CSQ: 99,99") != NULL)
+						{
+							BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+							BSP_BC25_CMD_InQueue(CMD_AT_CSQ_REQ);
+							BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+							BSP_BC25_Info.cur_cmd_timeout_count = 3;							
+						}
+						else
+						{
+							BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+							BSP_BC25_CMD_InQueue(CMD_AT_QBAND15_REQ);
+							BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
+							BSP_BC25_Info.cur_cmd_timeout_count = 3;							
+						}
 					}
 				}
 			}
@@ -795,7 +812,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CEREG1_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CEREG1_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -836,7 +854,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGATT1_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CGATT1_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -864,7 +883,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;			
+			BSP_BC25_Info.cur_cmdtimout = 3000;			
 		}break;
 		case CMD_AT_CGATT1_RESP:
 		{
@@ -877,7 +896,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGATT_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CGATT_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -918,7 +938,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+CGATT: 1") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGACT11_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CGACT11_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -960,7 +981,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_CGPADDR_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_CGPADDR_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -1001,7 +1023,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+CGPADDR:") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_NCFG0_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_NCFG0_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -1042,7 +1065,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_NCDPOPEN_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_NCDPOPEN_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -1083,7 +1107,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "+QLWEVTIND: 3") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_NCDPOPEN_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_AT_NMSTATUS_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -1124,7 +1149,7 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "REGISTERED_AND_OBSERVED") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_NMSTATUS_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -1165,7 +1190,8 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
-						BSP_BC25_Info.cur_cmdreq = CMD_AT_NMSTATUS_REQ;
+						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
+						BSP_BC25_CMD_InQueue(CMD_ATE0_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;
 					}
@@ -1189,10 +1215,6 @@ void BSP_BC25_Loop(void)
 		}break;
 		default:break;
 	}
-	
-	
-	
-	
 }
 
 

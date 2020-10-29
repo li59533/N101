@@ -21,6 +21,7 @@
 #include "modbus_task.h"
 #include "modbus_rtu.h"
 #include "system_param.h"
+#include "net_task.h"
 /**
  * @addtogroup    bsp_uart_Modules 
  * @{  
@@ -840,8 +841,7 @@ void UART3_RX_TX_IRQHandler(void)
 		uart3_rev_space[uart3_i] = 0;
 		//BSP_UART_WriteBytes_DMA(BSP_UART0 , &c , 1);
 	}
-	
-	
+
 	if(UART_GetStatusFlags(UART3) &kUART_IdleLineFlag )
 	{
 		//DEBUG("kUART3_IdleLineFlag\r\n");
@@ -850,6 +850,7 @@ void UART3_RX_TX_IRQHandler(void)
 		BSP_BC25_R_InQueue((uint8_t *)uart3_rev_space , uart3_i);
 		BSP_UART_WriteBytes_DMA(BSP_UART0 , (uint8_t *)uart3_rev_space , uart3_i);
 		uart3_i = 0;
+		Net_Task_Event_Start(NET_TASK_BC25_LOOP_EVENT, EVENT_FROM_ISR);
 	}
 	
 }

@@ -116,7 +116,7 @@ uint32_t Net_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Net_Task,\
 							"Net Task",\
-							128,
+							2048,
 							NULL,
 							3,
 							&Net_Task_Handle);
@@ -157,11 +157,20 @@ void Net_Task(void * pvParameter)
 		}	
 		if((event_flag & NET_TASK_BC25_LOOP_EVENT) != 0x00)
 		{
-			DEBUG("NET_TASK_BC25_LOOP_EVENT\r\n");
+			//DEBUG("NET_TASK_BC25_LOOP_EVENT\r\n");
 			
 			BSP_BC25_Loop();
 			
 		}	
+		if((event_flag & NET_TASK_BC25_WAKEUP_EVENT) != 0x00)
+		{
+			BSP_BC25_NB_PSMwakeup();
+		}		
+		if((event_flag & NET_TASK_BC25_HREST_EVENT) != 0x00)
+		{
+			BSP_BC25_NB_HRest();	
+		}			
+		
 	}
 }
 
@@ -176,7 +185,7 @@ void Net_Task_Event_Start(uint32_t events, uint8_t event_from)
 		}
 		break;
 		case EVENT_FROM_ISR:
-		{
+		{ 
 			xTaskNotifyFromISR(Net_Task_Handle, events, eSetBits , NULL);
 		}
 		break;

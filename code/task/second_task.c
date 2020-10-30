@@ -153,9 +153,6 @@ void Second_Task(void * pvParameter)
 	//UBaseType_t ramainheap = 0;
 	DEBUG("Second Task Enter\r\n");
 	
-	
-	
-	
 	while(1)
 	{
 //		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
@@ -183,8 +180,8 @@ void Second_Task(void * pvParameter)
 //		ramainheap = uxTaskGetStackHighWaterMark(Hal_Task_Handle);
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
 		vTaskDelay(pdMS_TO_TICKS(30000));
-
-		BSP_BC25_NB_PSMwakeup();
+		BSP_BC25_Report( 0 , 0);
+		//BSP_BC25_NB_PSMwakeup();
 	}
 	
 }

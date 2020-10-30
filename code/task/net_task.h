@@ -18,6 +18,7 @@
  * @{ 
  */
 #include "self_def.h"
+#include "FreeRTOS.h"
 #include "task.h"
 /**
  * @addtogroup    net_task_Modules 
@@ -31,7 +32,10 @@
 #define NET_TASK_TEST_EVENT 			(0X01 << 0)
 #define NET_TASK_TEST2_EVENT			(0X01 << 1)
 
+
 #define NET_TASK_BC25_LOOP_EVENT		(0x01 << 2)
+#define NET_TASK_BC25_WAKEUP_EVENT		(0x01 << 3)
+#define NET_TASK_BC25_HREST_EVENT		(0x01 << 4)
 /**
  * @}
  */

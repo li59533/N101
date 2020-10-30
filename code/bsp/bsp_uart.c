@@ -695,13 +695,13 @@ void BSP_UART_WriteBytes_Blocking(uint8_t BSP_UARTX , uint8_t *buf, uint16_t len
 	}
 }
 		// --------------
-static uint8_t uart0_send_space[300] = {0};
+static uint8_t uart0_send_space[1200] = {0};
 static uint8_t uart1_send_space[300] = {0};
-static uint8_t uart3_send_space[300] = {0};
+static uint8_t uart3_send_space[1200] = {0};
 static uint8_t uart4_send_space[300] = {0};
-static uint8_t uart0_rev_space[300] = {0};
+static uint8_t uart0_rev_space[1200] = {0};
 static uint8_t uart1_rev_space[300] = {0};
-static uint8_t uart3_rev_space[300] = {0};
+static uint8_t uart3_rev_space[1200] = {0};
 static uint8_t uart4_rev_space[300] = {0};
 void BSP_UART_WriteBytes_DMA(uint8_t BSP_UARTX , uint8_t *buf, uint16_t len)
 {

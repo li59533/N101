@@ -65,10 +65,14 @@
  */
  
 void BSP_BC25_Init(void); 
+void BSP_BC25_NB_pStart(void);
+void BSP_BC25_NB_HRest(void);
 void BSP_BC25_Loop(void);
 void BSP_BC25_NB_PSMwakeup(void);
 
 void BSP_BC25_Send(uint8_t *buf , uint16_t len );
+ 
+void BSP_BC25_Report(uint8_t *buf ,uint16_t len); 
  
 void BSP_BC25_CMD_InQueue(uint8_t at_cmd);
 uint8_t BSP_BC25_CMD_OutQueue(void);

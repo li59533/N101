@@ -1005,7 +1005,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 300;			
+			BSP_BC25_Info.cur_cmdtimout = 65000;			
 		}break;
 		case CMD_AT_CGATT_RESP:
 		{
@@ -1506,8 +1506,8 @@ void BSP_BC25_Loop(void)
 		{
 			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
 			char *send_buf;
-			send_buf = pvPortMalloc(sizeof(char) * 1024);
-			snprintf(send_buf , 512 , "%s500,%s\r\n" , nb_AT_NMGS,bsp_bc25_testcode());
+			send_buf = pvPortMalloc(sizeof(char) * 1200);
+			snprintf(send_buf , 1200 , "%s500,%s\r\n" , nb_AT_NMGS,bsp_bc25_testcode());
 			BSP_BC25_Send((uint8_t *)send_buf ,strlen(send_buf));
 			vPortFree(send_buf);
 			

@@ -31,11 +31,7 @@
  * @{  
  */
 #define REFRESH_TASK_TEST_EVENT 			(0X01 << 0)
-#define REFRESH_TASK_TEST2_EVENT			(0X01 << 1)
-#define REFRESH_TASK_CHARATERISTIC_EVENT	(0X01 << 2)
-#define REFRESH_TASK_WAVE_EVENT				(0X01 << 3)
-#define REFRESH_TASK_CONF_EVENT				(0X01 << 4)
-#define REFRESH_TASK_MBTOSYS_EVENT			(0X01 << 5)
+
 /**
  * @}
  */

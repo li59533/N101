@@ -166,18 +166,63 @@ static void bsp_spi1_init(void)
 	
 	DSPI_MasterTransferCreateHandle(SPI1, &g_m_sp1_handle, DSPI1_MasterUserCallback, NULL);
 	
-	
+	//NVIC_SetPriority( SPI1_IRQn , 1U);
 }
 
 static void DSPI1_MasterUserCallback(SPI_Type *base, dspi_master_handle_t *handle, status_t status, void *userData)
 {
     if (status == kStatus_Success)
     {
+		DEBUG("DSPI1_MasterUserCallback\r\n");
         __NOP();
     }
-
+}
+uint8_t tx_testbuf[8] = {0x12 ,0x34 , 0x56 , 0x78, 0xbc , 0xff , 0xaa};
+uint8_t rx_testbuf[8];
+void BSP_SPI_Send(uint8_t *buf , uint8_t len )
+{
+	dspi_transfer_t dspi_transfer;
+	
+	dspi_transfer.txData = tx_testbuf;
+	dspi_transfer.rxData = rx_testbuf;
+	dspi_transfer.dataSize = 8;
+	DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi_transfer);
+	
 }
 
+
+
+// ------ IRQ ------
+
+void SPI1_IRQHandler()
+{
+	DEBUG("SPI1_DriverIRQHandler\r\n");
+	DSPI_MasterTransferHandleIRQ( SPI1 , &g_m_sp1_handle);
+}
+/*
+// -----------------
+void BSP_SPI_Write16Bits(uint8_t bsp_spix , uint16_t data)
+{
+	SPI_EnableInterrupts(SPI0 , kSPI_TxEmptyInterruptEnable);	
+	SPI_WriteData(SPI0, data);
+	
+//	SPI_WriteBlocking(SPI0, uint8_t *buffer, size_t size)
+	
+}
+//static uint16_t spivalue = 0;
+void SPI0_IRQHandler(void)
+{
+	//DEBUG("SPI0_IRQHandler\r\n");
+	if((SPI_GetStatusFlags(SPI0) & kSPI_TxBufferEmptyFlag)== kSPI_TxBufferEmptyFlag)
+	{
+		BSP_AD7682_GetValue(SPI_ReadData(SPI0));
+		SPI_DisableInterrupts(SPI0, kSPI_TxEmptyInterruptEnable);
+
+		//DEBUG("SPI0 : value->%d\r\n" , spivalue);
+	}	
+}
+
+*/ 
 
 
 /**

@@ -20,8 +20,6 @@
  * @addtogroup    XXX 
  * @{  
  */
-#include "modbus_task.h" 
-#include "modbus_rtu.h"
 
 #include "sample_task.h"
 #include "first_task.h"
@@ -263,14 +261,12 @@ void FTM0_IRQHandler(void)
 {
 	if(FTM_GetStatusFlags(FTM0) & kFTM_TimeOverflowFlag )
 	{
-		rBufToRing();
+		//rBufToRing();
 		/* Clear interrupt flag.*/
 		FTM_ClearStatusFlags(FTM0, kFTM_TimeOverflowFlag);
 		FTM_StopTimer(FTM0);	
 		
-		
-		Modbus_Task_Event_Start(MODBUS_TASK_DATAPROCESS_EVENT, EVENT_FROM_ISR);
-		
+
 		
 		DEBUG("FTM0_IRQHandler\r\n");	
 	}

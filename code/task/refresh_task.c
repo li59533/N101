@@ -146,8 +146,7 @@ void Refresh_Task(void * pvParameter)
 	DEBUG("Refresh Task Enter\r\n");
 	UBaseType_t refreshtask_ramainheap = 0;
 
-	APP_RefreshMB_ConfParam();
-	
+
 	while(1)
 	{
 		xTaskNotifyWait(0x00,ULONG_MAX,&event_flag , portMAX_DELAY);
@@ -158,31 +157,7 @@ void Refresh_Task(void * pvParameter)
 			refreshtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
 			DEBUG("Refresh Task ramain heap:%d %%\r\n",refreshtask_ramainheap);
 		}
-		if((event_flag & REFRESH_TASK_CHARATERISTIC_EVENT) != 0x00)
-		{
-			DEBUG("Refresh Task CHARATERISTIC_EVENT\r\n");
-			APP_RefreshMB_Charateristic();
-		}	
-
-		if((event_flag & REFRESH_TASK_WAVE_EVENT) != 0x00)
-		{
-			DEBUG("Refresh Task WAVE_EVENT\r\n");
-			//APP_RefreshMB_Waveform();
-			
-		}	
-		if((event_flag & REFRESH_TASK_CONF_EVENT) != 0x00)
-		{
-			DEBUG("Refresh Task CONF_EVENT\r\n");
-			APP_RefreshMB_ConfParam();
-		}	
 		
-		if((event_flag & REFRESH_TASK_MBTOSYS_EVENT) != 0x00)
-		{
-			DEBUG("Refresh Task MBtoSYS_EVENT\r\n");
-			APP_Refresh_MBtoSys();
-			Hal_Task_Event_Start(HAL_TASK_SAVE_SYS_EVENT , EVENT_FROM_TASK);
-			
-		}			
 	}
 }
 

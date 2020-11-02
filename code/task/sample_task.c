@@ -164,10 +164,7 @@ void Sample_Task(void * pvParameter)
 		if((event_flag & SAMPLE_TASK_CALC_EVENT) != 0x00)
 		{
 			DEBUG("Sample Task SAMPLE_TASK_CALC_EVENT\r\n");
-			//taskENTER_CRITICAL();
-			APP_Calc_Process();
-			//taskEXIT_CRITICAL();
-			Refresh_Task_Event_Start(REFRESH_TASK_CHARATERISTIC_EVENT, EVENT_FROM_TASK);
+
 		}				
 	}
 }

@@ -24,7 +24,7 @@
 
 #include "first_task.h"
 #include "second_task.h"
-#include "modbus_task.h"
+
 #include "sample_task.h"
 #include "refresh_task.h"
 #include "hal_task.h"
@@ -36,7 +36,7 @@
 
 #include "bsp_bc25.h"
 
-
+#include "bsp_spi.h"
 
 /**
  * @addtogroup    second_task_Modules 
@@ -153,6 +153,11 @@ void Second_Task(void * pvParameter)
 	//UBaseType_t ramainheap = 0;
 	DEBUG("Second Task Enter\r\n");
 	
+	//BSP_SPI_Init(BSP_SPI1);
+
+	
+	
+	
 	while(1)
 	{
 //		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
@@ -180,8 +185,11 @@ void Second_Task(void * pvParameter)
 //		ramainheap = uxTaskGetStackHighWaterMark(Hal_Task_Handle);
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
 		vTaskDelay(pdMS_TO_TICKS(30000));
-		BSP_BC25_Report( 0 , 0);
+		//BSP_BC25_Report( 0 , 0);
 		//BSP_BC25_NB_PSMwakeup();
+		
+		//BSP_SPI_Send(0,0);
+		
 	}
 	
 }

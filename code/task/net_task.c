@@ -116,7 +116,7 @@ uint32_t Net_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Net_Task,\
 							"Net Task",\
-							2048,
+							4096,
 							NULL,
 							3,
 							&Net_Task_Handle);

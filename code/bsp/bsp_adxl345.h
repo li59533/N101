@@ -1,6 +1,6 @@
 /**
  **************************************************************************************************
- * @file        bsp_spi.h
+ * @file        bsp_adxl345.h
  * @author
  * @version
  * @date        5/28/2016
@@ -10,31 +10,21 @@
  *
  **************************************************************************************************
  */
-#ifndef _BSP_SPI_H_
-#define _BSP_SPI_H_
+#ifndef _BSP_ADXL345_H_
+#define _BSP_ADXL345_H_
 
 /**
  * @addtogroup    XXX 
  * @{ 
  */
-#include "self_def.h"
+
 /**
- * @addtogroup    bsp_spi_Modules 
+ * @addtogroup    bsp_adxl345_Modules 
  * @{  
  */
 
 /**
- * @defgroup      bsp_spi_Exported_Macros 
- * @{  
- */
-#define BSP_SPI0 0
-#define BSP_SPI1 1
-/**
- * @}
- */
-
-/**
- * @defgroup      bsp_spi_Exported_Constants
+ * @defgroup      bsp_adxl345_Exported_Macros 
  * @{  
  */
 
@@ -43,7 +33,7 @@
  */
 
 /**
- * @defgroup      bsp_spi_Exported_Types 
+ * @defgroup      bsp_adxl345_Exported_Constants
  * @{  
  */
 
@@ -52,7 +42,7 @@
  */
 
 /**
- * @defgroup      bsp_spi_Exported_Variables 
+ * @defgroup      bsp_adxl345_Exported_Types 
  * @{  
  */
 
@@ -61,11 +51,21 @@
  */
 
 /**
- * @defgroup      bsp_spi_Exported_Functions 
+ * @defgroup      bsp_adxl345_Exported_Variables 
  * @{  
  */
-void BSP_SPI_Init(uint8_t BSP_SPIx);
-void BSP_SPI_Send(uint8_t *buf , uint8_t len );
+
+/**
+ * @}
+ */
+
+/**
+ * @defgroup      bsp_adxl345_Exported_Functions 
+ * @{  
+ */
+ 
+void BSP_Adxl345_Init(void);
+
 /**
  * @}
  */

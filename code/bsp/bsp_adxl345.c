@@ -109,6 +109,14 @@ void BSP_Adxl345_read(uint8_t addr , uint8_t *buf , uint8_t len)
 	
 }
 
+void BSP_Adxl345_rev_xyz(void)
+{
+	uint8_t cmd[2];
+	cmd[0] = XL345_DATAX0;
+	cmd[1] = 0xC0;
+	
+}
+
 
 /**
  * @}

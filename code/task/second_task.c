@@ -129,7 +129,7 @@ uint32_t Second_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Second_Task,\
 							"Second_Task",\
-							256,
+							1024,
 							NULL,
 							1,
 							&Second_Task_Handle);
@@ -153,10 +153,7 @@ void Second_Task(void * pvParameter)
 	//UBaseType_t ramainheap = 0;
 	DEBUG("Second Task Enter\r\n");
 	
-	//BSP_SPI_Init(BSP_SPI1);
-
-	
-	
+	BSP_SPI_Init(BSP_SPI1);
 	
 	while(1)
 	{
@@ -184,11 +181,13 @@ void Second_Task(void * pvParameter)
 //		
 //		ramainheap = uxTaskGetStackHighWaterMark(Hal_Task_Handle);
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
-		vTaskDelay(pdMS_TO_TICKS(30000));
+		
+		
+		RTOS_Delay_ms(100);
 		//BSP_BC25_Report( 0 , 0);
 		//BSP_BC25_NB_PSMwakeup();
 		
-		//BSP_SPI_Send(0,0);
+		BSP_SPI_Send(0,0);
 		
 	}
 	

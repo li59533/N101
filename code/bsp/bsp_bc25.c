@@ -962,7 +962,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGATT1 ,strlen(nb_AT_CGATT1));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT1_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 3000;			
+			BSP_BC25_Info.cur_cmdtimout = 65000;			
 		}break;
 		case CMD_AT_CGATT1_RESP:
 		{
@@ -1005,7 +1005,7 @@ void BSP_BC25_Loop(void)
 			BSP_BC25_Send((uint8_t *)nb_AT_CGATT ,strlen(nb_AT_CGATT));
 			BSP_BC25_Info.cur_cmdresp = CMD_AT_CGATT_RESP;
 			BSP_BC25_Info.cur_cmdstatus = CMD_RESP;
-			BSP_BC25_Info.cur_cmdtimout = 65000;			
+			BSP_BC25_Info.cur_cmdtimout = 300;			
 		}break;
 		case CMD_AT_CGATT_RESP:
 		{

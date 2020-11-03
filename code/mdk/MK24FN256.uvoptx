@@ -152,50 +152,50 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>1379</LineNumber>
+          <LineNumber>156</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>7886</Address>
+          <Address>14162</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\bsp\bsp_bc25.c</Filename>
+          <Filename>..\task\second_task.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MK24FN256\../bsp/bsp_bc25.c\1379</Expression>
+          <Expression>\\MK24FN256\../task/second_task.c\156</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>1390</LineNumber>
+          <LineNumber>190</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>7936</Address>
+          <Address>14186</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\bsp\bsp_bc25.c</Filename>
+          <Filename>..\task\second_task.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MK24FN256\../bsp/bsp_bc25.c\1390</Expression>
+          <Expression>\\MK24FN256\../task/second_task.c\190</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>191</LineNumber>
+          <LineNumber>187</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>7542</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\task\second_task.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\bsp\bsp_spi.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\MK24FN256\../bsp/bsp_spi.c\187</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -223,6 +223,11 @@
           <count>4</count>
           <WinNumber>1</WinNumber>
           <ItemText>uart3_send_space</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rx_testbuf</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

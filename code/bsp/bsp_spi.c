@@ -127,8 +127,14 @@ static void bsp_spi1_init(void)
     CLOCK_EnableClock(kCLOCK_PortE);
 
     /* PORTE0  is configured as SPI1_PCS1 */
+//	gpio_pin_config_t config =
+//	{
+//		kGPIO_DigitalOutput,
+//		0,
+//	};
     PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt2);
-
+//	GPIO_PinInit( GPIOE , 0, &config);	
+//	GPIO_PinWrite(GPIOE, 0, 1);
     /* PORTE1  is configured as SPI1_SOUT */
     PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt2);
 
@@ -144,14 +150,14 @@ static void bsp_spi1_init(void)
 
     /* Master config */
     masterConfig.whichCtar = kDSPI_Ctar0;
-    masterConfig.ctarConfig.baudRate = 2000000U;
-    masterConfig.ctarConfig.bitsPerFrame = 8U;
-    masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveHigh;
-    masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseFirstEdge;
+    masterConfig.ctarConfig.baudRate = 500000U;
+    masterConfig.ctarConfig.bitsPerFrame = 16U;
+    masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveLow;
+    masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseSecondEdge;
     masterConfig.ctarConfig.direction = kDSPI_MsbFirst;
-    masterConfig.ctarConfig.pcsToSckDelayInNanoSec = 1000000000U / 2000000U;
-    masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = 500;
-    masterConfig.ctarConfig.betweenTransferDelayInNanoSec = 500;
+    masterConfig.ctarConfig.pcsToSckDelayInNanoSec = 1000;
+    masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = 1000;
+    masterConfig.ctarConfig.betweenTransferDelayInNanoSec = 1000;
 
     masterConfig.whichPcs = kDSPI_Pcs1;
     masterConfig.pcsActiveHighOrLow = kDSPI_PcsActiveLow;
@@ -162,11 +168,13 @@ static void bsp_spi1_init(void)
     masterConfig.samplePoint = kDSPI_SckToSin0Clock;
 
 
-    DSPI_MasterInit(SPI1, &masterConfig, DSPI0_CLK_SRC);	
+    DSPI_MasterInit(SPI1, &masterConfig, CLOCK_GetFreq(DSPI1_CLK_SRC));	
 	
 	DSPI_MasterTransferCreateHandle(SPI1, &g_m_sp1_handle, DSPI1_MasterUserCallback, NULL);
 	
 	//NVIC_SetPriority( SPI1_IRQn , 1U);
+	
+	DSPI_Enable(SPI1,  true);
 }
 
 static void DSPI1_MasterUserCallback(SPI_Type *base, dspi_master_handle_t *handle, status_t status, void *userData)
@@ -174,22 +182,29 @@ static void DSPI1_MasterUserCallback(SPI_Type *base, dspi_master_handle_t *handl
     if (status == kStatus_Success)
     {
 		DEBUG("DSPI1_MasterUserCallback\r\n");
+		//GPIO_PinWrite(GPIOE, 0, 1);
+		uint32_t read_buf;
+		read_buf = DSPI_ReadData(SPI1);
+		DEBUG("SPI rev:%X\r\n" ,read_buf );
         __NOP();
     }
 }
-uint8_t tx_testbuf[8] = {0x12 ,0x34 , 0x56 , 0x78, 0xbc , 0xff , 0xaa};
+uint8_t tx_testbuf[8] = {0x00 ,0xC0 , 0x56 , 0x78, 0xbc , 0xff , 0xaa ,0xbb};
 uint8_t rx_testbuf[8];
 void BSP_SPI_Send(uint8_t *buf , uint8_t len )
 {
 	dspi_transfer_t dspi_transfer;
 	
+	tx_testbuf[1] = tx_testbuf[1] | 0x32;
 	dspi_transfer.txData = tx_testbuf;
 	dspi_transfer.rxData = rx_testbuf;
-	dspi_transfer.dataSize = 8;
-	DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi_transfer);
+	dspi_transfer.dataSize = 7;
+	dspi_transfer.configFlags = kDSPI_MasterPcs1;
 	
+	//GPIO_PinWrite(GPIOE, 0, 0);
+	DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi_transfer);
+	//DSPI_MasterTransferBlocking(SPI1, &dspi_transfer);
 }
-
 
 
 // ------ IRQ ------

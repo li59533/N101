@@ -233,7 +233,22 @@ void BSP_SPI_ReadByte(uint8_t addr)
 	dspi1_transfer.txData[1] = addr | 0x80; 
 	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
 	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	
+	
 }
+
+
+uint8_t BSP_SPI_ReadByte_Test(uint8_t addr)
+{
+	uint8_t val = 0;
+	dspi1_transfer.txData[0] = 0x00 ;
+	dspi1_transfer.txData[1] = addr | 0x80; 
+	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);	
+	val = (uint8_t ) DSPI_ReadData(SPI1);
+	return val ;
+}
+
 
 // ------ IRQ ------
 

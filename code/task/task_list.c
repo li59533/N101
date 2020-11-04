@@ -27,7 +27,7 @@
 #include "hal_task.h"
 #include "period_task.h"
 #include "net_task.h"
-
+#include "led_task.h"
 
 /**
  * @addtogroup    task_list_Modules 
@@ -122,6 +122,7 @@ void RTOS_Init(void)
 	//basetype = Hal_Task_Init();
 	basetype = First_Task_Init();
 	basetype = Second_Task_Init();	
+	basetype = Led_Task_Init();	
 	//basetype = Period_Task_Init();
 	//basetype = Net_Task_Init();
 	//vTaskStartScheduler();

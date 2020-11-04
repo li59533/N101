@@ -2,7 +2,7 @@
  **************************************************************************************************
  * @file        bsp_led.h
  * @author
- * @version
+ * @version    v0.1.0
  * @date        
  * @brief
  **************************************************************************************************
@@ -28,20 +28,28 @@
  * @{  
  */
 
-#define BSP_LED1        0
-#define BSP_LED2        1
-#define BSP_LED3        2
+#define BSP_COUNT       1
+#define BSP_LED_0       0
+#define BSP_LED_1       1
+#define BSP_LED_2      	2
+#define BSP_LED_3       3
+#define BSP_LED_4       4
+#define BSP_LED_5       5
+#define BSP_LED_6       6
 
 
-#define BSP_LEDCOUNT    1
+ // --------User Define ---------
+#define BSP_LED_TEST    BSP_LED_0
 
-#define BSP_LED_BLINK_ENABLE   TRUE
+#define BSP_LED_DATA 			BSP_LED_0
+#define BSP_LED_RANGE			BSP_LED_1
+#define BSP_LED_C				BSP_LED_2
+#define BSP_LED_D				BSP_LED_3
+#define BSP_LED_TEST_UNIT		BSP_LED_4
+#define BSP_LED_STANDARD_UINT	BSP_LED_5
+#define BSP_LED_EXCITATION		BSP_LED_6 
 
-
-
-// ----------define self -------------
-#define BSP_LED_TEST  BSP_LED1
-// -----------------------------------
+ // --------End User Define------
 /**
  * @}
  */
@@ -54,12 +62,18 @@
 /**
  * @}
  */
-
+ 
 /**
  * @defgroup      bsp_led_Exported_Types 
  * @{  
  */
 
+typedef enum
+{
+	Blink_HighSpeed = 1,
+	Blink_MidSpeed ,
+	Blink_LowSpeed , 
+}BSP_LED_FuncBlink_e;
 /**
  * @}
  */
@@ -78,12 +92,15 @@
  * @{  
  */
 
-void BSP_LED_Init(void);
-void BSP_LED_Open(uint8_t BSP_LEDx);
-void BSP_LED_Close(uint8_t BSP_LEDx);
-void BSP_LED_Toggle(uint8_t BSP_LEDx);
-void BSP_LED_Blink(uint8_t BSP_LEDx, uint8_t numBlinks, uint8_t percent, uint16_t period);
-void BSP_LED_Update(void);
+void Bsp_LedInit(void);
+void Bsp_LedOpen(uint8_t bsp_ledx);
+void Bsp_LedClose(uint8_t bsp_ledx);
+void Bsp_LedToggle(uint8_t bsp_ledx);
+
+
+void BSP_Led_UpdateStatus(void); // let this func in 10ms
+void BSP_Led_Blink(uint8_t bsp_ledx , uint8_t blink_count , uint8_t duty_cycle , uint16_t period);
+void BSP_LED_BlinkStandard(uint8_t bsp_ledx ,uint8_t count , BSP_LED_FuncBlink_e funcblink);
 
 /**
  * @}

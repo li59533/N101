@@ -25,6 +25,8 @@
 #include "first_task.h"
 #include "system_param.h"
 
+#include "bsp_led.h"
+#include "bsp_adxl345.h"
 /**
  * @addtogroup    bsp_tim_Modules 
  * @{  
@@ -181,16 +183,17 @@ static void bsp_tmp1_init(void)
      * Set timer period.
     */
     //FTM_SetTimerPeriod(FTM1, 3662); // div_1 3622 -> 16384Hz
-	FTM_SetTimerPeriod(FTM1, 4883); // div_1 4883 -> 12288Hz
+	//FTM_SetTimerPeriod(FTM1, 14648); // div_1 4883 -> 12288Hz
+	FTM_SetTimerPeriod(FTM1, 14648); // div_1 14648 -> 4096Hz   
 	//FTM_SetTimerPeriod(FTM1, 65535); // test value
 	// -----trg----------
 	
 	// ------------------
 
 	// -----IRQ-------
-//    FTM_EnableInterrupts(FTM1, kFTM_TimeOverflowInterruptEnable);
-//	NVIC_SetPriority(FTM1_IRQn , 7);
-//    EnableIRQ(FTM1_IRQn);
+    FTM_EnableInterrupts(FTM1, kFTM_TimeOverflowInterruptEnable);
+	NVIC_SetPriority(FTM1_IRQn , 7);
+    EnableIRQ(FTM1_IRQn);
 	// ---------------
 
 }
@@ -279,9 +282,10 @@ void FTM1_IRQHandler(void)
 	{
 		/* Clear interrupt flag.*/
 		FTM_ClearStatusFlags(FTM1, kFTM_TimeOverflowFlag);
-		DEBUG("FTM1_IRQHandler\r\n");
+		//DEBUG("FTM1_IRQHandler\r\n");
+		Bsp_LedToggle(BSP_LED_TEST);
+		BSP_Adxl345_TestCode();
 	}
-
 }
 
  // ---------------------------------------

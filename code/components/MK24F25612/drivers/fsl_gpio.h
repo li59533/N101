@@ -179,6 +179,11 @@ static inline void GPIO_WritePinOutput(GPIO_Type *base, uint32_t pin, uint8_t ou
     GPIO_PinWrite(base, pin, output);
 }
 
+static inline void GPIO_WritePinToggle(GPIO_Type *base, uint32_t pin)
+{
+    base->PTOR = 1U << pin;
+}
+
 /*!
  * @brief Sets the output level of the multiple GPIO pins to the logic 1.
  *

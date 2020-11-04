@@ -152,50 +152,66 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>156</LineNumber>
+          <LineNumber>112</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>14162</Address>
+          <Address>3728</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\task\second_task.c</Filename>
+          <Filename>..\bsp\bsp_adxl345.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MK24FN256\../task/second_task.c\156</Expression>
+          <Expression>\\MK24FN256\../bsp/bsp_adxl345.c\112</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>190</LineNumber>
+          <LineNumber>106</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>14186</Address>
+          <Address>3680</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\task\second_task.c</Filename>
+          <Filename>..\bsp\bsp_adxl345.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MK24FN256\../task/second_task.c\190</Expression>
+          <Expression>\\MK24FN256\../bsp/bsp_adxl345.c\106</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>187</LineNumber>
+          <LineNumber>108</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>7542</Address>
+          <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\bsp\bsp_spi.c</Filename>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\bsp\bsp_adxl345.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MK24FN256\../bsp/bsp_spi.c\187</Expression>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>114</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\bsp\bsp_adxl345.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

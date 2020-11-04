@@ -71,6 +71,12 @@
  * @{  
  */
 dspi_master_handle_t g_m_sp1_handle;
+
+
+static dspi_transfer_t dspi1_transfer;
+static uint8_t tx_testbuf[2] = {0x00 ,0x00 };
+static uint8_t rx_testbuf[2] = {0x00 ,0x00 };
+
 /**
  * @}
  */
@@ -150,7 +156,7 @@ static void bsp_spi1_init(void)
 
     /* Master config */
     masterConfig.whichCtar = kDSPI_Ctar0;
-    masterConfig.ctarConfig.baudRate = 500000U;
+    masterConfig.ctarConfig.baudRate = 2000000U;
     masterConfig.ctarConfig.bitsPerFrame = 16U;
     masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveLow;
     masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseSecondEdge;
@@ -175,6 +181,12 @@ static void bsp_spi1_init(void)
 	//NVIC_SetPriority( SPI1_IRQn , 1U);
 	
 	DSPI_Enable(SPI1,  true);
+	
+	
+	dspi1_transfer.txData = tx_testbuf;
+	dspi1_transfer.rxData = rx_testbuf;
+	dspi1_transfer.dataSize = 2;
+	dspi1_transfer.configFlags = kDSPI_MasterPcs1;
 }
 
 static void DSPI1_MasterUserCallback(SPI_Type *base, dspi_master_handle_t *handle, status_t status, void *userData)
@@ -189,8 +201,7 @@ static void DSPI1_MasterUserCallback(SPI_Type *base, dspi_master_handle_t *handl
         __NOP();
     }
 }
-uint8_t tx_testbuf[8] = {0x00 ,0xC0 , 0x56 , 0x78, 0xbc , 0xff , 0xaa ,0xbb};
-uint8_t rx_testbuf[8];
+
 void BSP_SPI_Send(uint8_t *buf , uint8_t len )
 {
 	dspi_transfer_t dspi_transfer;
@@ -206,6 +217,23 @@ void BSP_SPI_Send(uint8_t *buf , uint8_t len )
 	//DSPI_MasterTransferBlocking(SPI1, &dspi_transfer);
 }
 
+// ------ Transfer ------
+void BSP_SPI_WriteByte(uint8_t addr , uint8_t val)
+{
+	dspi1_transfer.txData[0] = val ;
+	dspi1_transfer.txData[1] = addr ; 
+	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
+	
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+}
+
+void BSP_SPI_ReadByte(uint8_t addr)
+{
+	dspi1_transfer.txData[0] = 0x00 ;
+	dspi1_transfer.txData[1] = addr | 0x80; 
+	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+}
 
 // ------ IRQ ------
 

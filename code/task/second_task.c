@@ -38,6 +38,8 @@
 
 #include "bsp_spi.h"
 
+#include "bsp_adxl345.h"
+
 /**
  * @addtogroup    second_task_Modules 
  * @{  
@@ -152,8 +154,8 @@ void Second_Task(void * pvParameter)
 	UBaseType_t secondtask_ramainheap = 0;
 	//UBaseType_t ramainheap = 0;
 	DEBUG("Second Task Enter\r\n");
-	
-	BSP_SPI_Init(BSP_SPI1);
+
+	BSP_Adxl345_Init();
 	
 	while(1)
 	{
@@ -183,12 +185,11 @@ void Second_Task(void * pvParameter)
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
 		
 		
-		RTOS_Delay_ms(100);
+		RTOS_Delay_ms(20);
 		//BSP_BC25_Report( 0 , 0);
 		//BSP_BC25_NB_PSMwakeup();
-		
-		BSP_SPI_Send(0,0);
-		
+		BSP_Adxl345_TestCode();
+	
 	}
 	
 }

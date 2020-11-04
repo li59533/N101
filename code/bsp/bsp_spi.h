@@ -66,6 +66,11 @@
  */
 void BSP_SPI_Init(uint8_t BSP_SPIx);
 void BSP_SPI_Send(uint8_t *buf , uint8_t len );
+void BSP_SPI_WriteByte(uint8_t addr , uint8_t val);
+void BSP_SPI_ReadByte(uint8_t addr);
+
+
+
 /**
  * @}
  */

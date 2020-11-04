@@ -66,6 +66,10 @@
  
 void BSP_Adxl345_Init(void);
 
+
+
+// ------- Test Code -----------
+void BSP_Adxl345_TestCode(void);
 /**
  * @}
  */

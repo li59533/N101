@@ -115,7 +115,7 @@ void RTOS_Init(void)
 	BaseType_t basetype = { 0 };
 	
 	//basetype = Modbus_Task_Init();
-	//basetype = Sample_Task_Init();
+	//
 
 	//basetype = Refresh_Task_Init();
 
@@ -123,6 +123,9 @@ void RTOS_Init(void)
 	basetype = First_Task_Init();
 	basetype = Second_Task_Init();	
 	basetype = Led_Task_Init();	
+	basetype = Sample_Task_Init();
+	
+	
 	//basetype = Period_Task_Init();
 	//basetype = Net_Task_Init();
 	//vTaskStartScheduler();

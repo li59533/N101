@@ -99,8 +99,8 @@
  */
 void Clog_Float(const char * buf ,float  value)
 {
-	char cbuf[30];
-	snprintf( cbuf , 30 , "%s%f\r\n" , buf , value);
+	char cbuf[50];
+	snprintf( cbuf , 50 , "%s%f\r\n" , buf , value);
 	DEBUG("%s" , cbuf);
 }
 /**

@@ -163,8 +163,9 @@ void Sample_Task(void * pvParameter)
 
 		if((event_flag & SAMPLE_TASK_CALC_EVENT) != 0x00)
 		{
+			APP_Calc_Process();
 			DEBUG("Sample Task SAMPLE_TASK_CALC_EVENT\r\n");
-
+			
 		}				
 	}
 }

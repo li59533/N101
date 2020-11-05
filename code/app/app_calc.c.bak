@@ -127,6 +127,34 @@ void APP_Calc_Process(void)
 	testOutput = pvPortMalloc(sizeof(float) * APP_SAMPLE_CHANNEL_0_RATE * 2 );	
 	testOutput_2 = pvPortMalloc(sizeof(float) * APP_SAMPLE_CHANNEL_0_RATE  );	
 	
+	float Axial_Sensitivity[3];
+	
+	if(g_SystemParam_Config.X_Axial_Sensitivity > 0)
+	{
+		Axial_Sensitivity[0] = 1.0f / g_SystemParam_Config.X_Axial_Sensitivity;
+	}
+	else
+	{
+		Axial_Sensitivity[0] = 1.0f;
+	}
+	
+	if(g_SystemParam_Config.Y_Axial_Sensitivity > 0)
+	{
+		Axial_Sensitivity[1] = 1.0f / g_SystemParam_Config.Y_Axial_Sensitivity;
+	}
+	else
+	{
+		Axial_Sensitivity[1] = 1.0f;
+	}	
+	
+	if(g_SystemParam_Config.Z_Axial_Sensitivity > 0)
+	{
+		Axial_Sensitivity[2] = 1.0f / g_SystemParam_Config.Z_Axial_Sensitivity;
+	}
+	else
+	{
+		Axial_Sensitivity[2] = 1.0f;
+	}	
 
 	// --------Calc 3 Channels Charateristic Value------------
 	
@@ -141,7 +169,7 @@ void APP_Calc_Process(void)
 			
 			for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 			{
-				emu_inter_data[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i + 4096] )* 3.9 / 1000 * 9.8;
+				emu_inter_data[i] = (float)APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i + 4096] * APP_CALC_ADC_SCALEFACTOR * Axial_Sensitivity[channel_index];
 			}
 		}
 		else
@@ -151,7 +179,7 @@ void APP_Calc_Process(void)
 			
 			for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 			{
-				emu_inter_data[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i] )* 3.9 / 1000 * 9.8;
+				emu_inter_data[i] = (float)APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i] * APP_CALC_ADC_SCALEFACTOR * Axial_Sensitivity[channel_index];
 			}		
 		}
 		
@@ -165,7 +193,7 @@ void APP_Calc_Process(void)
 			{
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i + 4096] )* 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i + 4096] * APP_CALC_ADC_SCALEFACTOR * Axial_Sensitivity[APP_SAMPLE_Y_INDEX];
 				}
 			}
 			else
@@ -173,7 +201,7 @@ void APP_Calc_Process(void)
 
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i]) * 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i] * APP_CALC_ADC_SCALEFACTOR * Axial_Sensitivity[APP_SAMPLE_Y_INDEX];
 				}		
 			}	
 
@@ -201,7 +229,7 @@ void APP_Calc_Process(void)
 			{
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i + 4096]) * 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i + 4096] * APP_CALC_ADC_SCALEFACTOR * Axial_Sensitivity[APP_SAMPLE_X_INDEX];
 				}
 			}
 			else
@@ -209,7 +237,7 @@ void APP_Calc_Process(void)
 
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i] )* 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i] * APP_CALC_ADC_SCALEFACTOR * Axial_Sensitivity[APP_SAMPLE_X_INDEX];
 				}		
 			}	
 
@@ -245,7 +273,7 @@ void APP_Calc_Process(void)
 		
 		
 		// ------------Enter MB REG----------------------
-		//APP_Refresh_MoveWavetoMB(channel_index , emu_inter_data);
+		APP_Refresh_MoveWavetoMB(channel_index , emu_inter_data);
 		
 		// ----------------------------------------------
 		
@@ -306,7 +334,6 @@ void APP_Calc_Process(void)
 		//Clog_Float("Displace_PP:" , APP_CalcValue[channel_index].Displace_PP);		
 
 		//APP_CalcValue[channel_index].BaseFreq = 0 ;
-		/*
 		if(APP_CalcValue[channel_index].ACC_RMS  <= 0.1f)
 		{
 			APP_CalcValue[channel_index].ACC_P = 0;
@@ -317,7 +344,6 @@ void APP_Calc_Process(void)
 			APP_CalcValue[channel_index].Kurtosis_Coefficient = 0;
 			APP_CalcValue[channel_index].Velocity_RMS = 0;
 		}
-		*/
 		
 		if(APP_CalcValue[channel_index].ACC_RMS > 100.0f)
 		{
@@ -392,54 +418,7 @@ void APP_Calc_Y_SelfCal(void)
 	
 	}
 }
-// ----- Test Code -------
-void APP_Calc_TestCode(void)
-{
-	//  -- show code --
-			/*
-			APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_P = 0;
-			APP_CalcValue[APP_SAMPLE_X_INDEX].BaseFreq = 0;
-			APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_PP = 0;
-			APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_RMS = 0;
-			APP_CalcValue[APP_SAMPLE_X_INDEX].Envelope = 0;
-			APP_CalcValue[APP_SAMPLE_X_INDEX].Kurtosis_Coefficient = 0;
-			APP_CalcValue[APP_SAMPLE_X_INDEX].Velocity_RMS = 0;	
-			*/
-	DEBUG("--------- X --------\r\n");
-	Clog_Float("X ACC_P:" , APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_P);
-	Clog_Float("X ACC_RMS:" , APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_RMS);
-	Clog_Float("X BaseFreq:" , APP_CalcValue[APP_SAMPLE_X_INDEX].BaseFreq);
-	Clog_Float("X Displace_PP:" , APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_PP);
-	Clog_Float("X Displace_RMS:" , APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_RMS);
-	Clog_Float("X Envelope:" , APP_CalcValue[APP_SAMPLE_X_INDEX].Envelope);
-	Clog_Float("X Kurtosis_Coefficient:" , APP_CalcValue[APP_SAMPLE_X_INDEX].Kurtosis_Coefficient);
-	Clog_Float("X Velocity_RMS:" , APP_CalcValue[APP_SAMPLE_X_INDEX].Velocity_RMS);
-	RTOS_Delay_ms(100);
-	DEBUG("--------- Y --------\r\n");
-	Clog_Float("Y ACC_P:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].ACC_P);
-	Clog_Float("Y ACC_RMS:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].ACC_RMS);
-	Clog_Float("Y BaseFreq:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].BaseFreq);
-	Clog_Float("Y Displace_PP:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].Displace_PP);
-	Clog_Float("Y Displace_RMS:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].Displace_RMS);
-	Clog_Float("Y Envelope:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].Envelope);
-	Clog_Float("Y Kurtosis_Coefficient:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].Kurtosis_Coefficient);
-	Clog_Float("Y Velocity_RMS:" , APP_CalcValue[APP_SAMPLE_Y_INDEX].Velocity_RMS);	
-	RTOS_Delay_ms(100);
-	DEBUG("--------- Z --------\r\n");
-	Clog_Float("Z ACC_P:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].ACC_P);
-	Clog_Float("Z ACC_RMS:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].ACC_RMS);
-	Clog_Float("Z BaseFreq:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].BaseFreq);
-	Clog_Float("Z Displace_PP:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].Displace_PP);
-	Clog_Float("Z Displace_RMS:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].Displace_RMS);
-	Clog_Float("Z Envelope:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].Envelope);
-	Clog_Float("Z Kurtosis_Coefficient:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].Kurtosis_Coefficient);
-	Clog_Float("Z Velocity_RMS:" , APP_CalcValue[APP_SAMPLE_Z_INDEX].Velocity_RMS);		
-	
-	//  ---------------
-}
 
-
-// -----------------------
 
 /**
  * @}

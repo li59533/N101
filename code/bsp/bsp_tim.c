@@ -284,7 +284,8 @@ void FTM1_IRQHandler(void)
 		FTM_ClearStatusFlags(FTM1, kFTM_TimeOverflowFlag);
 		//DEBUG("FTM1_IRQHandler\r\n");
 		Bsp_LedToggle(BSP_LED_TEST);
-		BSP_Adxl345_TestCode();
+		//BSP_Adxl345_TestCode();
+		BSP_Adxl345_Sample_3Axis();
 	}
 }
 

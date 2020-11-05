@@ -41,6 +41,8 @@
 #include "bsp_adxl345.h"
 
 #include "bsp_tim.h"
+
+#include "app_calc.h"
 /**
  * @addtogroup    second_task_Modules 
  * @{  
@@ -156,13 +158,7 @@ void Second_Task(void * pvParameter)
 	//UBaseType_t ramainheap = 0;
 	RTOS_Delay_ms(1000);
 	DEBUG("Second Task Enter\r\n");
-	
-	BSP_Adxl345_Init();
-	
-	BSP_Tim_Init(BSP_TIM1);
-	BSP_Tim_1_Start();
-	
-	
+		
 	while(1)
 	{
 //		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
@@ -191,7 +187,10 @@ void Second_Task(void * pvParameter)
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
 		
 		
-		RTOS_Delay_ms(1000);
+		RTOS_Delay_ms(3000);
+		APP_Calc_TestCode();
+		
+		
 		//BSP_BC25_Report( 0 , 0);
 		//BSP_BC25_NB_PSMwakeup();
 		//BSP_Adxl345_TestCode();

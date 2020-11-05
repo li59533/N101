@@ -19,6 +19,8 @@
  * @{  
  */
 #include "bsp_spi.h"
+
+#include "app_sample.h"
 /**
  * @addtogroup    bsp_adxl345_Modules 
  * @{  
@@ -105,7 +107,7 @@ void BSP_Adxl345_Init(void)
 	BSP_SPI_Init( BSP_SPI1 );
 	
 	//BSP_SPI_ReadByte(XL345_DEVID);
-	DEBUG("Device ID:%X\r\n" , BSP_SPI_ReadByte_Test(XL345_DEVID));
+	DEBUG("Device ID:%X\r\n" , BSP_SPI_ReadByte(XL345_DEVID));
 	
 	
 	BSP_SPI_WriteByte(XL345_DATA_FORMAT , 0X0b);
@@ -116,39 +118,40 @@ void BSP_Adxl345_Init(void)
 	BSP_SPI_WriteByte(XL345_INT_MAP , 0X00);
 }
 
-
-
-
-void BSP_Adxl345_read(uint8_t addr , uint8_t *buf , uint8_t len)
+void BSP_Adxl345_Sample_3Axis(void)
 {
 	
-}
-
-
-
-/*
-XL345_DATA_FORMAT
-XL345_POWER_CTL
-XL345_INT_ENABLE
-*/
-
-
-void BSP_Adxl345_rev_xyz(void)  
-{
-	uint8_t cmd[2];
-	cmd[0] = XL345_DATAX0;
-	cmd[1] = 0xC0;
+	uint8_t buf[6];
+	int16_t Acc_X = 0;
+	int16_t Acc_Y = 0;
+	int16_t Acc_Z = 0;
 	
+	buf[0] = BSP_SPI_ReadByte(XL345_DATAX0);
+	buf[1] = BSP_SPI_ReadByte(XL345_DATAX1);
+	
+	buf[2] = BSP_SPI_ReadByte(XL345_DATAY0);
+	buf[3] = BSP_SPI_ReadByte(XL345_DATAY1);
+	
+	buf[4] = BSP_SPI_ReadByte(XL345_DATAZ0);
+	buf[5] = BSP_SPI_ReadByte(XL345_DATAZ1);
+	
+	Acc_X = ((buf[1] << 8 | buf[0])); 
+	Acc_Y = ((buf[3] << 8 | buf[2])); 
+	Acc_Z = ((buf[5] << 8 | buf[4])); 	
+	
+	
+	APP_GetOriginalData( Acc_X);
+	APP_GetOriginalData( Acc_Y);
+	APP_GetOriginalData( Acc_Z);
 }
+
 
 
 // ------ Test Code ---------
 
 void BSP_Adxl345_TestCode(void)
 {
-	BSP_SPI_ReadByte(XL345_DATAZ0);
-	BSP_SPI_ReadByte(XL345_DATAZ1);
-	
+
 	char str_buf[50];
 	
 	uint8_t buf[6];
@@ -156,14 +159,14 @@ void BSP_Adxl345_TestCode(void)
 	int16_t Acc_Y = 0;
 	int16_t Acc_Z = 0;
 	
-	buf[0] = BSP_SPI_ReadByte_Test(XL345_DATAX0);
-	buf[1] = BSP_SPI_ReadByte_Test(XL345_DATAX1);
+	buf[0] = BSP_SPI_ReadByte(XL345_DATAX0);
+	buf[1] = BSP_SPI_ReadByte(XL345_DATAX1);
 	
-	buf[2] = BSP_SPI_ReadByte_Test(XL345_DATAY0);
-	buf[3] = BSP_SPI_ReadByte_Test(XL345_DATAY1);
+	buf[2] = BSP_SPI_ReadByte(XL345_DATAY0);
+	buf[3] = BSP_SPI_ReadByte(XL345_DATAY1);
 	
-	buf[4] = BSP_SPI_ReadByte_Test(XL345_DATAZ0);
-	buf[5] = BSP_SPI_ReadByte_Test(XL345_DATAZ1);
+	buf[4] = BSP_SPI_ReadByte(XL345_DATAZ0);
+	buf[5] = BSP_SPI_ReadByte(XL345_DATAZ1);
 	
 	Acc_X = ((buf[1] << 8 | buf[0])); 
 	Acc_Y = ((buf[3] << 8 | buf[2])); 
@@ -171,7 +174,7 @@ void BSP_Adxl345_TestCode(void)
 	
 	//snprintf(str_buf , 50 , "X=%4.3f m/s2   Y=%4.3f m/s2   Z=%4.3f m/s2 \r\n" ,Acc_X*3.9/1000*9.8,Acc_Y*3.9/1000*9.8,Acc_Z*3.9/1000*9.8);
 	
-	DEBUG("%s" , str_buf);
+	//DEBUG("%s" , str_buf);
 	
 }
 

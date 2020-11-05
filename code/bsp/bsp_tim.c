@@ -174,7 +174,7 @@ static void bsp_tmp1_init(void)
     FTM_GetDefaultConfig(&ftmInfo);
     /* Divide FTM clock by 4 */
     ftmInfo.prescale = kFTM_Prescale_Divide_1;
-	//ftmInfo.prescale = kFTM_Prescale_Divide_128;
+	//ftmInfo.prescale = kFTM_Prescale_Divide_4;
 	
 	ftmInfo.extTriggers = kFTM_InitTrigger;
     /* Initialize FTM module */
@@ -184,7 +184,8 @@ static void bsp_tmp1_init(void)
     */
     //FTM_SetTimerPeriod(FTM1, 3662); // div_1 3622 -> 16384Hz
 	//FTM_SetTimerPeriod(FTM1, 14648); // div_1 4883 -> 12288Hz
-	FTM_SetTimerPeriod(FTM1, 14648); // div_1 14648 -> 4096Hz   
+	FTM_SetTimerPeriod(FTM1, 14648); // div_1 14648 -> 4096Hz  
+	//FTM_SetTimerPeriod(FTM1, 29296); // div_1 29296 -> 2048Hz  	
 	//FTM_SetTimerPeriod(FTM1, 65535); // test value
 	// -----trg----------
 	
@@ -285,7 +286,7 @@ void FTM1_IRQHandler(void)
 		//DEBUG("FTM1_IRQHandler\r\n");
 		Bsp_LedToggle(BSP_LED_TEST);
 		//BSP_Adxl345_TestCode();
-		BSP_Adxl345_Sample_3Axis();
+		BSP_Adxl345_Sample_3Axis_mul();
 	}
 }
 

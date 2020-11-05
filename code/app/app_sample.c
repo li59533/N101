@@ -160,7 +160,7 @@ static void app_samlpechannel_init(void)
 
 
 // ----Test Code--------
-uint16_t waveform[3] = {0};
+int16_t waveform[3] = {0};
 // ---------------------
 void APP_GetOriginalData( uint16_t data)
 {
@@ -176,7 +176,7 @@ void APP_GetOriginalData( uint16_t data)
 		Sample_Task_Event_Start( SAMPLE_TASK_CALC_EVENT, EVENT_FROM_ISR);
 	}
 	 // ---test code---
-	//waveform[app_sample_rank[APP_Sample_buf.cur_channel]] = data;
+	//waveform[app_sample_rank[APP_Sample_buf.cur_channel]] = (int16_t)((int16_t)data * 3.9 / 1000 * 9.8);
 	 // ---------------
 	APP_SetNextQriginalChannel_Process();
 }

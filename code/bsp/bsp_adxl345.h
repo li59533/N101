@@ -66,7 +66,7 @@
  
 void BSP_Adxl345_Init(void);
 void BSP_Adxl345_Sample_3Axis(void);
-
+void BSP_Adxl345_Sample_3Axis_mul(void);
 
 // ------- Test Code -----------
 void BSP_Adxl345_TestCode(void);

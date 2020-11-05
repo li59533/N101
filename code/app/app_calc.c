@@ -239,6 +239,7 @@ void APP_Calc_Process(void)
 			{
 				emu_inter_data[i] -= *mean_value;
 			}			
+			
 		}
 		
 		vPortFree(mean_value);

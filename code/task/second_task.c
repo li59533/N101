@@ -159,6 +159,10 @@ void Second_Task(void * pvParameter)
 	RTOS_Delay_ms(1000);
 	DEBUG("Second Task Enter\r\n");
 		
+	//BSP_Adxl345_Init();
+	
+	
+	
 	while(1)
 	{
 //		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
@@ -189,12 +193,8 @@ void Second_Task(void * pvParameter)
 		
 		RTOS_Delay_ms(3000);
 		APP_Calc_TestCode();
-		
-		
-		//BSP_BC25_Report( 0 , 0);
-		//BSP_BC25_NB_PSMwakeup();
 		//BSP_Adxl345_TestCode();
-		//BSP_Adxl345_TestCode();
+
 	}
 	
 }

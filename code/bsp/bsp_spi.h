@@ -70,6 +70,8 @@ void BSP_SPI_WriteByte(uint8_t addr , uint8_t val);
 uint8_t BSP_SPI_ReadByte(uint8_t addr);
 
 
+void BSP_SPI_ReadBytes(uint8_t addr , uint8_t * buf );
+
 /**
  * @}
  */

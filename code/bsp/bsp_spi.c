@@ -133,14 +133,16 @@ static void bsp_spi1_init(void)
     CLOCK_EnableClock(kCLOCK_PortE);
 
     /* PORTE0  is configured as SPI1_PCS1 */
-//	gpio_pin_config_t config =
-//	{
-//		kGPIO_DigitalOutput,
-//		0,
-//	};
+	gpio_pin_config_t config =
+	{
+		kGPIO_DigitalOutput,
+		0,
+	};
     PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt2);
-//	GPIO_PinInit( GPIOE , 0, &config);	
-//	GPIO_PinWrite(GPIOE, 0, 1);
+	
+	PORT_SetPinMux(PORTE, 0U, kPORT_MuxAsGpio);	
+	GPIO_PinInit( GPIOE , 0, &config);	
+	GPIO_PinWrite(GPIOE, 0, 1);
     /* PORTE1  is configured as SPI1_SOUT */
     PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt2);
 
@@ -156,14 +158,14 @@ static void bsp_spi1_init(void)
 
     /* Master config */
     masterConfig.whichCtar = kDSPI_Ctar0;
-    masterConfig.ctarConfig.baudRate = 2000000U;
+    masterConfig.ctarConfig.baudRate = 2500000U;
     masterConfig.ctarConfig.bitsPerFrame = 16U;
     masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveLow;
     masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseSecondEdge;
     masterConfig.ctarConfig.direction = kDSPI_MsbFirst;
-    masterConfig.ctarConfig.pcsToSckDelayInNanoSec = 1000;
-    masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = 1000;
-    masterConfig.ctarConfig.betweenTransferDelayInNanoSec = 1000;
+    masterConfig.ctarConfig.pcsToSckDelayInNanoSec = 500;
+    masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = 500;
+    masterConfig.ctarConfig.betweenTransferDelayInNanoSec = 500;
 
     masterConfig.whichPcs = kDSPI_Pcs1;
     masterConfig.pcsActiveHighOrLow = kDSPI_PcsActiveLow;
@@ -212,8 +214,9 @@ void BSP_SPI_Send(uint8_t *buf , uint8_t len )
 	dspi_transfer.dataSize = 7;
 	dspi_transfer.configFlags = kDSPI_MasterPcs1;
 	
-	//GPIO_PinWrite(GPIOE, 0, 0);
+	GPIO_PinWrite(GPIOE, 0, 0);
 	DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi_transfer);
+	GPIO_PinWrite(GPIOE, 0, 1);
 	//DSPI_MasterTransferBlocking(SPI1, &dspi_transfer);
 }
 
@@ -224,7 +227,9 @@ void BSP_SPI_WriteByte(uint8_t addr , uint8_t val)
 	dspi1_transfer.txData[1] = addr ; 
 	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
 	
+	GPIO_PinWrite(GPIOE, 0, 0);
 	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	GPIO_PinWrite(GPIOE, 0, 1);
 }
 
 uint8_t BSP_SPI_ReadByte(uint8_t addr)
@@ -233,11 +238,44 @@ uint8_t BSP_SPI_ReadByte(uint8_t addr)
 	dspi1_transfer.txData[0] = 0x00 ;
 	dspi1_transfer.txData[1] = addr | 0x80; 
 	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
-	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);	
+	GPIO_PinWrite(GPIOE, 0, 0);
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	GPIO_PinWrite(GPIOE, 0, 1);	
 	val = (uint8_t ) DSPI_ReadData(SPI1);
 	return val ;
 }
 
+
+void BSP_SPI_ReadBytes(uint8_t addr , uint8_t * buf )
+{
+	uint32_t val = 0;
+	dspi1_transfer.txData[0] = 0x00 ;
+	dspi1_transfer.txData[1] = addr | 0xC0; 
+	//DSPI_MasterTransferNonBlocking(SPI1, &g_m_sp1_handle , &dspi1_transfer);
+	GPIO_PinWrite(GPIOE, 0, 0);
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	val = DSPI_ReadData(SPI1);
+	buf[0] = val & 0xff;
+	dspi1_transfer.txData[0] = 0x00 ;
+	dspi1_transfer.txData[1] = 0x00; 
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	val = DSPI_ReadData(SPI1);
+	buf[1] = (val >> 8 )& 0xff;
+	buf[2] = (val )& 0xff;
+	dspi1_transfer.txData[0] = 0x00 ;
+	dspi1_transfer.txData[1] = 0x00; 
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	val = DSPI_ReadData(SPI1);
+	buf[3] = (val >> 8 )& 0xff;
+	buf[4] = (val )& 0xff;	
+	dspi1_transfer.txData[0] = 0x00 ;
+	dspi1_transfer.txData[1] = 0x00; 
+	DSPI_MasterTransferBlocking(SPI1 , &dspi1_transfer);
+	val = DSPI_ReadData(SPI1);	
+	buf[5] = (val >> 8 )& 0xff;
+	GPIO_PinWrite(GPIOE, 0, 1);	
+	
+}
 
 // ------ IRQ ------
 

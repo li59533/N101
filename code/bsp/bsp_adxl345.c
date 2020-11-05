@@ -146,6 +146,25 @@ void BSP_Adxl345_Sample_3Axis(void)
 }
 
 
+void BSP_Adxl345_Sample_3Axis_mul(void)
+{
+	uint8_t buf[6];
+	int16_t Acc_X = 0;
+	int16_t Acc_Y = 0;
+	int16_t Acc_Z = 0;
+	
+	BSP_SPI_ReadBytes(XL345_DATAX0 , buf);
+	
+	Acc_X = ((buf[1] << 8 | buf[0])); 
+	Acc_Y = ((buf[3] << 8 | buf[2])); 
+	Acc_Z = ((buf[5] << 8 | buf[4])); 
+	
+	APP_GetOriginalData( Acc_X);
+	APP_GetOriginalData( Acc_Y);
+	APP_GetOriginalData( Acc_Z);	
+}
+
+
 
 // ------ Test Code ---------
 
@@ -172,10 +191,21 @@ void BSP_Adxl345_TestCode(void)
 	Acc_Y = ((buf[3] << 8 | buf[2])); 
 	Acc_Z = ((buf[5] << 8 | buf[4])); 
 	
-	//snprintf(str_buf , 50 , "X=%4.3f m/s2   Y=%4.3f m/s2   Z=%4.3f m/s2 \r\n" ,Acc_X*3.9/1000*9.8,Acc_Y*3.9/1000*9.8,Acc_Z*3.9/1000*9.8);
+	snprintf(str_buf , 50 , "X=%4.3f m/s2   Y=%4.3f m/s2   Z=%4.3f m/s2 \r\n" ,Acc_X*3.9/1000*9.8,Acc_Y*3.9/1000*9.8,Acc_Z*3.9/1000*9.8);
 	
-	//DEBUG("%s" , str_buf);
+	DEBUG("%s" , str_buf);
 	
+	// ------ multibyte read ---
+	BSP_SPI_ReadBytes(XL345_DATAX0 , buf);
+	
+	Acc_X = ((buf[1] << 8 | buf[0])); 
+	Acc_Y = ((buf[3] << 8 | buf[2])); 
+	Acc_Z = ((buf[5] << 8 | buf[4])); 
+	
+	snprintf(str_buf , 50 , "X=%4.3f m/s2   Y=%4.3f m/s2   Z=%4.3f m/s2 \r\n" ,Acc_X*3.9/1000*9.8,Acc_Y*3.9/1000*9.8,Acc_Z*3.9/1000*9.8);
+	
+	DEBUG("----%s" , str_buf);	
+	// -------------------------
 }
 
 

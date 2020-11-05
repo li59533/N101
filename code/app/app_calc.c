@@ -26,7 +26,7 @@
 
 #include "bsp_fft_integral_freertos.h"
 #include "app_refresh.h"
-
+#include "bsp_led.h"
 /**
  * @addtogroup    app_calc_Modules 
  * @{  
@@ -249,7 +249,7 @@ void APP_Calc_Process(void)
 		//APP_Refresh_MoveWavetoMB(channel_index , emu_inter_data);
 		
 		// ----------------------------------------------
-		
+
 		// ------------Calc ACC_P ACC_RMS----------------
 		
 		arm_abs_f32(emu_inter_data,testOutput,APP_SAMPLE_CHANNEL_0_RATE);
@@ -319,6 +319,9 @@ void APP_Calc_Process(void)
 			APP_CalcValue[channel_index].Velocity_RMS = 0;
 		}
 		*/
+
+		
+		
 		
 		if(APP_CalcValue[channel_index].ACC_RMS > 100.0f)
 		{

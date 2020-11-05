@@ -126,8 +126,8 @@ void RTOS_Init(void)
 	basetype = Sample_Task_Init();
 	
 	
-	//basetype = Period_Task_Init();
-	//basetype = Net_Task_Init();
+	basetype = Period_Task_Init();
+    basetype = Net_Task_Init();
 	//vTaskStartScheduler();
 	if(pdPASS == basetype)
 	{

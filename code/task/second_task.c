@@ -192,7 +192,7 @@ void Second_Task(void * pvParameter)
 		
 		
 		RTOS_Delay_ms(3000);
-		APP_Calc_TestCode();
+		//APP_Calc_TestCode();
 		//BSP_Adxl345_TestCode();
 
 	}

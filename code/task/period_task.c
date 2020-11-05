@@ -126,7 +126,7 @@ uint32_t Period_Task_Init(void)
 							"Period_Task",\
 							1024,
 							NULL,
-							1,
+							configMAX_PRIORITIES - 1,
 							&Period_Task_Handle);
 	
 //	Period_Task_Handle=xTaskCreateStatic((TaskFunction_t	)Period_Task,		//ÈÎÎñº¯Êý

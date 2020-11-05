@@ -116,7 +116,7 @@ uint32_t Led_Task_Init(void)
 							"Led Task",\
 							64,
 							NULL,
-							1,
+							 configMAX_PRIORITIES - 1,
 							&Led_Task_Handle);
 	
 	
@@ -140,7 +140,7 @@ void Led_Task(void * pvParameter)
 	//BSP_LED_BlinkStandard(BSP_LED_TEST_UNIT, 0, Blink_MidSpeed);
 	//BSP_LED_BlinkStandard(BSP_LED_STANDARD_UINT, 0, Blink_HighSpeed);
 	
-	//BSP_LED_BlinkStandard(BSP_LED_TEST, 0, Blink_MidSpeed);
+	BSP_LED_BlinkStandard(BSP_LED_TEST , 3, Blink_LowSpeed);
 	
 	while(1)
 	{

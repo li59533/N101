@@ -123,7 +123,7 @@ uint32_t Sample_Task_Init(void)
 							"Sample Task",\
 							1024,
 							NULL,
-							configMAX_PRIORITIES - 1,
+							configMAX_PRIORITIES - 2,
 							&Sample_Task_Handle);
 	
 
@@ -163,7 +163,9 @@ void Sample_Task(void * pvParameter)
 
 		if((event_flag & SAMPLE_TASK_CALC_EVENT) != 0x00)
 		{
+			//Bsp_LedToggle(BSP_LED_TEST);
 			APP_Calc_Process();
+			//Bsp_LedToggle(BSP_LED_TEST);
 			DEBUG("Sample Task SAMPLE_TASK_CALC_EVENT\r\n");
 			
 		}				

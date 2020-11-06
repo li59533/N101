@@ -141,7 +141,7 @@ void APP_Calc_Process(void)
 			
 			for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 			{
-				emu_inter_data[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i + 4096] )* 3.9 / 1000 * 9.8;
+				emu_inter_data[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i + 4096] )* 3.9f / 1000 * 9.8f;
 			}
 		}
 		else
@@ -151,7 +151,7 @@ void APP_Calc_Process(void)
 			
 			for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 			{
-				emu_inter_data[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i] )* 3.9 / 1000 * 9.8;
+				emu_inter_data[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[channel_index].originalData[i] )* 3.9f / 1000 * 9.8f;
 			}		
 		}
 		
@@ -165,7 +165,7 @@ void APP_Calc_Process(void)
 			{
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i + 4096] )* 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i + 4096] )* 3.9f / 1000 * 9.8f;
 				}
 			}
 			else
@@ -173,7 +173,7 @@ void APP_Calc_Process(void)
 
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i]) * 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)((int16_t)APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_Y_INDEX].originalData[i]) * 3.9f / 1000 * 9.8f;
 				}		
 			}	
 
@@ -201,7 +201,7 @@ void APP_Calc_Process(void)
 			{
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i + 4096]) * 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i + 4096]) * 3.9f / 1000 * 9.8f;
 				}
 			}
 			else
@@ -209,7 +209,7 @@ void APP_Calc_Process(void)
 
 				for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 				{
-					testOutput_2[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i] )* 3.9 / 1000 * 9.8;
+					testOutput_2[i] = (float)((int16_t )APP_Sample_buf.Sample_Channel_buf[APP_SAMPLE_X_INDEX].originalData[i] )* 3.9f / 1000 * 9.8f;
 				}		
 			}	
 

@@ -120,7 +120,7 @@ void RTOS_Init(void)
 	//basetype = Refresh_Task_Init();
 
 	//basetype = Hal_Task_Init();
-	basetype = First_Task_Init();
+	//basetype = First_Task_Init();
 	basetype = Second_Task_Init();	
 	basetype = Led_Task_Init();	
 	basetype = Sample_Task_Init();

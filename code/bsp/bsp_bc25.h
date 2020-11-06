@@ -27,7 +27,11 @@
  * @defgroup      bsp_bc25_Exported_Macros 
  * @{  
  */
-
+typedef enum
+{
+	MODULE_SEND_OK , 
+	MODULE_SEND_BUSY ,
+}BSP_BC25_ModuleSendStatus_e;
 /**
  * @}
  */
@@ -73,6 +77,9 @@ void BSP_BC25_NB_PSMwakeup(void);
 void BSP_BC25_Send(uint8_t *buf , uint16_t len );
  
 void BSP_BC25_Report(uint8_t *buf ,uint16_t len); 
+uint8_t BSP_BC25_Report_Status(void);
+ 
+ 
  
 void BSP_BC25_CMD_InQueue(uint8_t at_cmd);
 uint8_t BSP_BC25_CMD_OutQueue(void);

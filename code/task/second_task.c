@@ -43,6 +43,7 @@
 #include "bsp_tim.h"
 
 #include "app_calc.h"
+#include "app_dataprocess.h"
 /**
  * @addtogroup    second_task_Modules 
  * @{  
@@ -155,21 +156,28 @@ uint32_t Second_Task_Init(void)
 void Second_Task(void * pvParameter)
 {
 	UBaseType_t secondtask_ramainheap = 0;
-	//UBaseType_t ramainheap = 0;
+	UBaseType_t ramainheap = 0;
 	RTOS_Delay_ms(1000);
 	DEBUG("Second Task Enter\r\n");
 		
 	//BSP_Adxl345_Init();
 	
-	
+	APP_Dataprocess_Init();
 	
 	while(1)
 	{
-//		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
-//		DEBUG("Second Task ramain heap:%d %%\r\n",secondtask_ramainheap);		
+		
+		
+	
+		
+			
+		APP_DataP_MakeReportPac();
+		RTOS_Delay_ms(60000);	
+		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+		DEBUG("Second Task ramain heap:%d %%\r\n",secondtask_ramainheap);		
 		
 		DEBUG("Second Task Looping\r\n");
-//		DEBUG("Free Heap:%d\r\n" , RTOS_Get_FreeHeapSize());
+		DEBUG("Free Heap:%d\r\n" , RTOS_Get_FreeHeapSize());
 		
 //		ramainheap = uxTaskGetStackHighWaterMark(First_Task_Handle);
 //		DEBUG("First Task ramain heap:%d\r\n",ramainheap);
@@ -191,7 +199,7 @@ void Second_Task(void * pvParameter)
 //		DEBUG("Hal Task ramain heap:%d\r\n",ramainheap);
 		
 		
-		RTOS_Delay_ms(3000);
+		
 		//APP_Calc_TestCode();
 		//BSP_Adxl345_TestCode();
 

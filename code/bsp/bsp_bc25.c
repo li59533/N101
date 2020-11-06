@@ -127,6 +127,9 @@ typedef enum
 	MODULE_DISCONNECT,
 }BSP_BC25_Module_e;
 
+
+
+
 /**
  * @}
  */
@@ -197,6 +200,12 @@ typedef struct
 	uint8_t size   ;
 }BSP_BC25_CMDQueue_t;
 
+typedef struct
+{
+	uint8_t buf[1024];
+	uint16_t len;
+}bsp_bc25_reprotbuf_t ; 
+
 
 
 /**
@@ -231,7 +240,7 @@ static BSP_BC25_CMDQueue_t BSP_BC25_CMDQueue =
 	.size = 10,
 };
 
-
+static bsp_bc25_reprotbuf_t bsp_bc25_reprotbuf;
 /**
  * @}
  */
@@ -271,6 +280,7 @@ typedef struct
 	uint16_t cur_cmdtimout;
 	uint8_t cur_cmd_timeout_count;
 	uint8_t cur_module_status;
+	uint8_t cur_module_sendstatus;
 }BSP_BC25_Info_t;
 
 BSP_BC25_Info_t BSP_BC25_Info = 
@@ -280,6 +290,7 @@ BSP_BC25_Info_t BSP_BC25_Info =
 	.cur_cmdstatus = CMD_REQ,
 	.cur_cmdtimout = 0,
 	.cur_module_status = MODULE_DISCONNECT,
+	.cur_module_sendstatus = MODULE_SEND_OK , 
 };
 
 void BSP_BC25_Init(void)
@@ -365,18 +376,6 @@ void BSP_BC25_Rev_Process(uint8_t * buf , uint16_t len )
 	
 }
 
-static uint8_t bsp_bc25_reprotbuf[1024];
-
-uint8_t * bsp_bc25_testcode(void)
-{
-	for(uint16_t i = 0 ; i < 1024 ; i ++)
-	{
-		bsp_bc25_reprotbuf[i] = 'F';
-	}
-	bsp_bc25_reprotbuf[1000] = 0;
-	
-	return bsp_bc25_reprotbuf;
-}
 
 
 void BSP_BC25_Loop(void)
@@ -449,6 +448,7 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "CPIN: READY") != NULL)
 					{
+						BSP_BC25_Info.cur_module_sendstatus = MODULE_SEND_OK;
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
 						BSP_BC25_CMD_InQueue(CMD_AT_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
@@ -1507,7 +1507,9 @@ void BSP_BC25_Loop(void)
 			//BSP_BC25_T_InQueue((uint8_t *)nb_AT_NCFG0 ,strlen(nb_AT_NCFG0));
 			char *send_buf;
 			send_buf = pvPortMalloc(sizeof(char) * 1200);
-			snprintf(send_buf , 1200 , "%s500,%s\r\n" , nb_AT_NMGS,bsp_bc25_testcode());
+			
+			
+			snprintf(send_buf , 1200 , "%s%d,%s\r\n" , nb_AT_NMGS , bsp_bc25_reprotbuf.len , (char *)bsp_bc25_reprotbuf.buf);
 			BSP_BC25_Send((uint8_t *)send_buf ,strlen(send_buf));
 			vPortFree(send_buf);
 			
@@ -1526,8 +1528,9 @@ void BSP_BC25_Loop(void)
 				{
 					if(strstr( (const char *)rev_buf , "OK") != NULL)
 					{
+						BSP_BC25_Info.cur_module_sendstatus = MODULE_SEND_OK;
 						BSP_BC25_Info.cur_cmdreq = CMD_AT_NULL;
-						BSP_BC25_CMD_InQueue(CMD_SEND_QSCLK1_REQ);
+						//BSP_BC25_CMD_InQueue(CMD_SEND_QSCLK1_REQ);
 						BSP_BC25_Info.cur_cmdstatus = CMD_REQ;
 						BSP_BC25_Info.cur_cmd_timeout_count = 3;	
 					}
@@ -1600,10 +1603,56 @@ void BSP_BC25_Loop(void)
 
 
 
+/*
 
+static uint8_t bsp_bc25_reprotbuf[1024];
+
+uint8_t * bsp_bc25_testcode(void)
+{
+	for(uint16_t i = 0 ; i < 1024 ; i ++)
+	{
+		bsp_bc25_reprotbuf[i] = 'F';
+	}
+	bsp_bc25_reprotbuf[1000] = 0;
+	
+	return bsp_bc25_reprotbuf;
+}
+
+*/
 
 void BSP_BC25_Report(uint8_t *buf ,uint16_t len)
 {
+	uint8_t temp = 0;
+	BSP_BC25_Info.cur_module_sendstatus = MODULE_SEND_BUSY ;
+	memset(bsp_bc25_reprotbuf.buf , 0 ,sizeof(bsp_bc25_reprotbuf.buf));
+	for(uint16_t i =0 ; i < len ; i++)
+	{
+		temp = (buf[i] >> 4);
+		if(temp > 9)
+		{
+			temp -= 10;
+			bsp_bc25_reprotbuf.buf[2 * i] = (temp) + 'a';
+		}
+		else
+		{
+			bsp_bc25_reprotbuf.buf[2 * i] = (temp) + '0';
+		}
+		
+		temp = (buf[i] & 0x0f);
+		if(temp > 9)
+		{
+			temp -= 10;
+			bsp_bc25_reprotbuf.buf[2 * i + 1] = (temp) + 'a';
+		}
+		else
+		{
+			bsp_bc25_reprotbuf.buf[2 * i + 1] = (temp) + '0';
+		}		
+
+	}
+	//memcpy(bsp_bc25_reprotbuf.buf , buf , len);
+	bsp_bc25_reprotbuf.len = len;
+	
 	if(BSP_BC25_Info.cur_module_status == MODULE_SLEEP)
 	{
 		BSP_BC25_CMD_InQueue(CMD_MODULE_WAKEUP_REQ);
@@ -1613,9 +1662,12 @@ void BSP_BC25_Report(uint8_t *buf ,uint16_t len)
 	{
 		BSP_BC25_CMD_InQueue(CMD_SEND_NMGS_REQ);
 	}	
-	
 }
 
+uint8_t BSP_BC25_Report_Status(void)
+{
+	return BSP_BC25_Info.cur_module_sendstatus;
+}
 
 // --------- queue ----------
 void BSP_BC25_CMD_InQueue(uint8_t at_cmd)

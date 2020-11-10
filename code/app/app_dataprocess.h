@@ -65,8 +65,9 @@
  */
 void APP_Dataprocess_Init(void);
 void APP_DataP_MakeReportPac(void);
-
-
+void APP_DataP_MakeReportX(void);
+void APP_DataP_MakeReportY(void);
+void APP_DataP_MakeReportZ(void);
 // ------- TestCode -----
 void APP_DataP_TestCode(void);
 

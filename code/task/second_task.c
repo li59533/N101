@@ -166,16 +166,14 @@ void Second_Task(void * pvParameter)
 	
 	while(1)
 	{
-		
-		
-	
-		
-			
-		APP_DataP_MakeReportPac();
-		RTOS_Delay_ms(60000);	
+		APP_DataP_MakeReportX();
+		RTOS_Delay_ms(1000);	
+		APP_DataP_MakeReportY();
+		RTOS_Delay_ms(1000);	
+		APP_DataP_MakeReportZ();
+		RTOS_Delay_ms(120000);	
 		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
 		DEBUG("Second Task ramain heap:%d %%\r\n",secondtask_ramainheap);		
-		
 		DEBUG("Second Task Looping\r\n");
 		DEBUG("Free Heap:%d\r\n" , RTOS_Get_FreeHeapSize());
 		

@@ -17,6 +17,7 @@
  * @addtogroup    XXX 
  * @{ 
  */
+#include "bsp_conf.h"
 #include "self_def.h"
 /**
  * @addtogroup    bsp_rtc_Modules 

@@ -11,15 +11,15 @@
  **************************************************************************************************
  */
 
-#include "bsp_conf.h"
 
+#include "bsp_rtc.h"
 #include "clog.h"
 
 /**
  * @addtogroup    XXX 
  * @{  
  */
-#include "bsp_clock.h"
+
 /**
  * @addtogroup    bsp_rtc_Modules 
  * @{  
@@ -111,21 +111,22 @@ void BSP_RTC_Init(void)
 	rtc_config_t config = { 0 };
 	rtc_datetime_t datetime = { 0 };
 	
-	CLOCK_EnableClock(kCLOCK_PortC);
-	PORT_SetPinMux(PORTC, 1,kPORT_MuxAsGpio);
-	gpio_pin_config_t gpio_pin_config ;
-	gpio_pin_config.pinDirection = kGPIO_DigitalInput;
-	GPIO_PinInit(GPIOC, 1, &gpio_pin_config);
-	
-	CLOCK_EnableClock(kCLOCK_Rtc0);
-	
-	CLOCK_SetEr32kClock(2);
+//	CLOCK_EnableClock(kCLOCK_PortC);
+//	PORT_SetPinMux(PORTC, 1,kPORT_MuxAsGpio);
+//	gpio_pin_config_t gpio_pin_config ;
+//	gpio_pin_config.pinDirection = kGPIO_DigitalInput;
+//	GPIO_PinInit(GPIOC, 1, &gpio_pin_config);
+//	
+	//CLOCK_EnableClock(kCLOCK_Rtc0);
+	//CLOCK_SetEr32kClock(uint32_t src)
+	//CLOCK_SetRtcClkOutClock
+	CLOCK_SetEr32kClock(0);
 	
 	RTC_GetDefaultConfig(&config);
 		
 	RTC_Init(RTC , &config);
-	
-	RTC_SetOscCapLoad(RTC, kRTC_Capacitor_16p);
+	RTC_SetClockSource(RTC);
+	//RTC_SetOscCapLoad(RTC, kRTC_Capacitor_16p);
 	
 	
 	datetime.year = 2020;

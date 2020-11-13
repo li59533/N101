@@ -119,6 +119,9 @@ void APP_Sample_Init(void)
 
 	app_samlpechannel_init();
 	APP_StartSample();
+	
+	
+	
 }
 
 void APP_Sample_DeInit(void)

@@ -27,6 +27,8 @@
 #include "bsp_fft_integral_freertos.h"
 #include "app_refresh.h"
 #include "bsp_led.h"
+
+#include "bsp_uart.h"
 /**
  * @addtogroup    app_calc_Modules 
  * @{  
@@ -228,7 +230,9 @@ void APP_Calc_Process(void)
 			for(uint16_t i = 0 ; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++)
 			{
 				emu_inter_data[i] = emu_inter_data[i] * cosx + testOutput_2[i] * sinx;
-			}			
+				
+			}
+
 		}
 		else
 		{
@@ -238,11 +242,16 @@ void APP_Calc_Process(void)
 			for(uint16_t i = 0; i < APP_SAMPLE_CHANNEL_0_RATE ; i ++ )
 			{
 				emu_inter_data[i] -= *mean_value;
+				
 			}			
 			
 		}
 		
 		vPortFree(mean_value);
+		
+		
+		
+		
 		
 		
 		// ------------Enter MB REG----------------------

@@ -127,6 +127,7 @@ careful use cjson , free mem especially
 
 void APP_DataP_MakeReportX(void)
 {
+	char str_buf[50];
 	cJSON * root =  cJSON_CreateObject();
 	cJSON * x_axis = cJSON_CreateObject();
 //	cJSON * y_axis = cJSON_CreateObject();
@@ -137,31 +138,41 @@ void APP_DataP_MakeReportX(void)
 	cJSON_AddItemToObject(root, "rssi", cJSON_CreateNumber(0));
 
 	cJSON_AddItemToObject(root, "x", x_axis);
-	cJSON_AddItemToObject(x_axis, "basefreq", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].BaseFreq));
-	cJSON_AddItemToObject(x_axis, "acc_p", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_P));
-	cJSON_AddItemToObject(x_axis, "acc_rms", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_RMS));
-	cJSON_AddItemToObject(x_axis, "velocity_rms", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].Velocity_RMS));
-	cJSON_AddItemToObject(x_axis, "displace_pp", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_PP));
-	cJSON_AddItemToObject(x_axis, "displace_rms", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_RMS));	
-	cJSON_AddItemToObject(x_axis, "Envelope", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].Envelope));
-	cJSON_AddItemToObject(x_axis, "Kurtosis", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].Kurtosis_Coefficient));		
 	
 
-	char * str_buf ;
-	str_buf =  cJSON_Print(root);
-	DEBUG("%s\n", str_buf);	
 	
-	DEBUG("----Strlen:%d ---\r\n" , strlen(str_buf));
+	cJSON_AddItemToObject(x_axis, "basefreq", cJSON_CreateNumber(APP_CalcValue[APP_SAMPLE_X_INDEX].BaseFreq));
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_P) ; 
+	cJSON_AddItemToObject(x_axis, "acc_p", cJSON_CreateString((const char *)str_buf));
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].ACC_RMS) ; 
+	cJSON_AddItemToObject(x_axis, "acc_rms", cJSON_CreateString((const char *)str_buf));
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].Velocity_RMS) ; 
+	cJSON_AddItemToObject(x_axis, "velocity_rms", cJSON_CreateString((const char *)str_buf));
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_PP) ; 
+	cJSON_AddItemToObject(x_axis, "displace_pp",cJSON_CreateString((const char *)str_buf));
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].Displace_RMS) ; 
+	cJSON_AddItemToObject(x_axis, "displace_rms", cJSON_CreateString((const char *)str_buf));	
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].Envelope) ; 
+	cJSON_AddItemToObject(x_axis, "Envelope", cJSON_CreateString((const char *)str_buf));
+	snprintf(str_buf , 50 , "%0.2f" , APP_CalcValue[APP_SAMPLE_X_INDEX].Kurtosis_Coefficient) ; 
+	cJSON_AddItemToObject(x_axis, "Kurtosis", cJSON_CreateString((const char *)str_buf));		
+	
+
+	char * str_buf2 ;
+	str_buf2 =  cJSON_Print(root);
+	DEBUG("%s\n", str_buf2);	
+	
+	DEBUG("----Strlen:%d ---\r\n" , strlen(str_buf2));
 	
 	if(BSP_BC25_Report_Status() == MODULE_SEND_BUSY)
 	{
 		return;
 	}	
 	
-	BSP_BC25_Report((uint8_t *)str_buf ,strlen(str_buf)); 	
+	BSP_BC25_Report((uint8_t *)str_buf2 ,strlen(str_buf2)); 	
 	
 	cJSON_Delete(root);
-	cJSON_free(str_buf);	
+	cJSON_free(str_buf2);	
 }
 
 void APP_DataP_MakeReportY(void)

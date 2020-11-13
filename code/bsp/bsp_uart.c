@@ -905,6 +905,16 @@ void BSP_Uart_Test_Send(void)
 	BSP_UART_WriteBytes_DMA(BSP_485COM , test_bud, sizeof(test_bud));
 }
 
+
+void BSP_Uart_Test_Wave(float data)
+{
+	char strbuf[20];
+	
+	snprintf(strbuf , 20 , "%f\r\n" , data);
+	BSP_UART_WriteBytes_DMA(BSP_UART0 , (uint8_t *)strbuf , strlen(strbuf));
+}
+
+
 // -----------------------------
 
 /**

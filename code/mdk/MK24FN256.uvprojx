@@ -605,6 +605,16 @@
               <FileType>1</FileType>
               <FilePath>..\bsp\bsp_adxl345.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_smc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp\bsp_smc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -31,16 +31,17 @@
 #define USING_MKL16_LIB 			1
 // -----------------------------------------------
 // -----------BSP Module Active list -------------
-#define BSP_SMC_MODULE_ENABLE			0
+#define BSP_SMC_MODULE_ENABLE			1
 #define BSP_GPIO_MODULE_ENABLE			1
 #define BSP_TIM_MODULE_ENABLE			1
-#define BSP_RTC_MODULE_ENABLE			0
+#define BSP_RTC_MODULE_ENABLE			1
 #define BSP_ADC_MODULE_ENABLE			1
 #define BSP_DMA_MODULE_ENABLE			1
 #define BSP_USART_MODULE_ENABLE			1
 #define BSP_FLASH_MODULE_ENABLE			1
 #define BSP_LPV_MODULE_ENABLE			0
 #define BSP_CMP_MODULE_ENABLE			0
+
 
 #define BSP_CAN_MODULE_ENABLE 			0
 #define BSP_DAC_MODULE_ENABLE			0

@@ -180,9 +180,14 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetSimSafeDivs();
     ///* Configure RTC clock including enabling RTC oscillator. */
     //CLOCK_CONFIG_SetRtcClock(RTC_OSC_CAP_LOAD_0PF, RTC_RTC32KCLK_PERIPHERALS_DISABLED);
+	
+	
     /* Initializes OSC0 according to board configuration. */
     CLOCK_InitOsc0(&oscConfig_BOARD_BootClockRUN);
     CLOCK_SetXtal0Freq(oscConfig_BOARD_BootClockRUN.freq);
+	
+	CLOCK_SetEr32kClock(0);
+	CLOCK_SetXtal32Freq(32768);
     /* Configure FLL external reference divider (FRDIV). */
     CLOCK_CONFIG_SetFllExtRefDiv(mcgConfig_BOARD_BootClockRUN.frdiv);
     /* Set MCG to PEE mode. */

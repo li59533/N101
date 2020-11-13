@@ -88,7 +88,7 @@ void UART2_IRQHandler(void);
  
 // ------------Test-------------
 void BSP_Uart_Test_Send(void);
-
+void BSP_Uart_Test_Wave(float data);
 // -----------------------------
 
 /**

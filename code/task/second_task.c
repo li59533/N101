@@ -41,9 +41,10 @@
 #include "bsp_adxl345.h"
 
 #include "bsp_tim.h"
-
+#include "bsp_rtc.h"
 #include "app_calc.h"
 #include "app_dataprocess.h"
+#include "bsp_smc.h"
 /**
  * @addtogroup    second_task_Modules 
  * @{  
@@ -166,12 +167,14 @@ void Second_Task(void * pvParameter)
 	
 	while(1)
 	{
-		APP_DataP_MakeReportX();
-		RTOS_Delay_ms(1000);	
-		APP_DataP_MakeReportY();
-		RTOS_Delay_ms(1000);	
-		APP_DataP_MakeReportZ();
-		RTOS_Delay_ms(120000);	
+//		APP_DataP_MakeReportX();
+//		RTOS_Delay_ms(1000);	
+//		APP_DataP_MakeReportY();
+//		RTOS_Delay_ms(1000);	
+//		APP_DataP_MakeReportZ();
+		RTOS_Delay_ms(10000);	
+		BSP_SMC_TestCode();
+//		BSP_ShowDate();
 		secondtask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
 		DEBUG("Second Task ramain heap:%d %%\r\n",secondtask_ramainheap);		
 		DEBUG("Second Task Looping\r\n");

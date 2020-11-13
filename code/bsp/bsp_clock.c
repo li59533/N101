@@ -111,7 +111,7 @@ void BSP_ShowClock(void)
 	DEBUG("kCLOCK_BusClk:%d\r\n", CLOCK_GetFreq(kCLOCK_BusClk));
 	DEBUG("kCLOCK_FlashClk:%d\r\n", CLOCK_GetFreq(kCLOCK_FlashClk));
 	DEBUG("kCLOCK_PllFllSelClk:%d\r\n", CLOCK_GetFreq(kCLOCK_PllFllSelClk));
-	//DEBUG("kCLOCK_Er32kClk:%d\r\n", CLOCK_GetFreq(kCLOCK_Er32kClk));
+	DEBUG("kCLOCK_Er32kClk:%d\r\n", CLOCK_GetFreq(kCLOCK_Er32kClk));
 	DEBUG("kCLOCK_McgFixedFreqClk:%d\r\n", CLOCK_GetFreq(kCLOCK_McgFixedFreqClk));
 	DEBUG("kCLOCK_McgInternalRefClk:%d\r\n", CLOCK_GetFreq(kCLOCK_McgInternalRefClk));
 	DEBUG("kCLOCK_McgFllClk:%d\r\n", CLOCK_GetFreq(kCLOCK_McgFllClk));

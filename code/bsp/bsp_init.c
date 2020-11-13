@@ -24,6 +24,8 @@
 #include "bsp_tim.h"
 #include "bsp_clock.h"
 #include "bsp_adc.h"
+#include "bsp_rtc.h"
+#include "bsp_smc.h"
 /**
  * @addtogroup    bsp_init_Modules 
  * @{  
@@ -106,9 +108,13 @@
  */
 void BSP_Init(void)
 {
+	BSP_SMC_SetPowerModeProtection();
+	
 	BSP_ShowClock();
 	BSP_Flash_Init();
-	//BSP_UART_Init(BSP_UART1);
+	BSP_UART_Init(BSP_UART0);
+	//BSP_RTC_Init();
+
 	//BSP_Tim_Init(BSP_TIM0);
 	//BSP_ADC_Init();
 	DEBUG("bsp init\r\n");
